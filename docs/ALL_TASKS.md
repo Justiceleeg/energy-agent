@@ -29,9 +29,9 @@ This task list is organized into deployable vertical slices. Each slice delivers
 - [ ] **0.2 Install Core Dependencies**
   - Install shadcn/ui and configure
   - Install Recharts for visualizations
-  - Install Vercel AI SDK
-  - Install OpenAI SDK
+  - Install Vercel AI SDK (provides OpenAI integration for runtime API routes)
   - Install additional utilities (date-fns, zod for validation)
+  - Note: OpenAI SDK will be installed in slice 8 for batch processing scripts only
 
 - [ ] **0.3 Configure Environment**
   - Create `.env.local` with OpenAI API key
@@ -436,8 +436,9 @@ This task list is organized into deployable vertical slices. Each slice delivers
   - Handle ambiguous descriptions
 
 - [ ] **8.3 Build Batch Processing Script**
+  - Install OpenAI SDK (for batch processing script - not needed for runtime API routes)
   - Create Node.js script to process all raw plans
-  - Call OpenAI API for each plan (GPT-4o)
+  - Call OpenAI API for each plan (GPT-4o) using OpenAI SDK
   - Parse responses into structured format
   - Validate parsed data
   - Handle errors and retries
