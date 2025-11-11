@@ -14,31 +14,32 @@ This task list is organized into deployable vertical slices. Each slice delivers
 
 ---
 
-## 🎯 Slice 0: Project Setup & Foundation
+## 🎯 Slice 0: Project Setup & Foundation ✅
 **Goal:** Bootstrap the project with all necessary tooling and infrastructure  
-**Deploy Target:** Initial deployment with "Hello World"
+**Deploy Target:** Initial deployment with "Hello World"  
+**Status:** Completed
 
 ### Tasks
 
-- [ ] **0.1 Initialize Next.js Project**
+- [x] **0.1 Initialize Next.js Project**
   - Create Next.js 16 app with App Router
   - Configure TypeScript
   - Set up project structure
   - Initialize git repository
 
-- [ ] **0.2 Install Core Dependencies**
+- [x] **0.2 Install Core Dependencies**
   - Install shadcn/ui and configure
   - Install Recharts for visualizations
   - Install Vercel AI SDK (provides OpenAI integration for runtime API routes)
   - Install additional utilities (date-fns, zod for validation)
   - Note: OpenAI SDK will be installed in slice 8 for batch processing scripts only
 
-- [ ] **0.3 Configure Environment**
+- [x] **0.3 Configure Environment**
   - Create `.env.local` with OpenAI API key
   - Add `.env.example` template
   - Configure environment variables for Vercel deployment
 
-- [ ] **0.4 Set Up Project Structure**
+- [x] **0.4 Set Up Project Structure**
   ```
   /app
     /api
@@ -58,39 +59,40 @@ This task list is organized into deployable vertical slices. Each slice delivers
     /plans
       plans-raw.json
       plans-structured.json
-    /sample-csvs
+    /sample-csvs (moved to public/sample-csvs)
   ```
 
-- [ ] **0.5 Deploy to Vercel**
+- [x] **0.5 Deploy to Vercel**
   - Connect GitHub repository to Vercel
   - Configure environment variables in Vercel
   - Deploy and verify basic functionality
   - Set up preview deployments
 
-**Definition of Done:** Project deployed to Vercel with working homepage
+**Definition of Done:** Project deployed to Vercel with working homepage ✅
 
 ---
 
-## 🎯 Slice 1: CSV Upload & Basic Usage Display
+## 🎯 Slice 1: CSV Upload & Basic Usage Display ✅
 **Goal:** User can upload CSV and see basic usage statistics  
-**Deploy Target:** Working upload feature with insights
+**Deploy Target:** Working upload feature with insights  
+**Status:** Completed
 
 ### Tasks
 
-- [ ] **1.1 Create TypeScript Types**
+- [x] **1.1 Create TypeScript Types**
   - Define `HourlyUsageData` type
   - Define `UsageStatistics` type
   - Define basic `EnergyPlan` type (flat-rate only)
   - Define `PricingRule` union types
 
-- [ ] **1.2 Build CSV Upload Component**
+- [x] **1.2 Build CSV Upload Component**
   - Create drag-and-drop file upload with shadcn
   - Validate CSV format (8760 rows expected)
   - Parse CSV into hourly usage data
   - Display upload progress/status
   - Handle errors gracefully
 
-- [ ] **1.3 Create CSV Parser & Validator**
+- [x] **1.3 Create CSV Parser & Validator**
   - Parse CSV into structured data
   - Validate data integrity (dates, numeric values)
   - Calculate basic statistics:
@@ -99,32 +101,35 @@ This task list is organized into deployable vertical slices. Each slice delivers
     - Peak usage hour
     - Min/max monthly usage
 
-- [ ] **1.4 Create Usage Insights Component**
+- [x] **1.4 Create Usage Insights Component**
   - Display total annual consumption
   - Show average monthly breakdown
   - Display peak usage patterns
   - Create simple bar chart of monthly usage (Recharts)
+  - Added smart Y-axis formatting with seasonal-aware precision
 
-- [ ] **1.5 Create Mock Data**
+- [x] **1.5 Create Mock Data**
   - Generate 3 sample CSV files:
-    - `night-owl-user.csv` (high evening usage)
-    - `solar-home-user.csv` (low daytime, high evening)
-    - `typical-family.csv` (standard 9-5 pattern)
+    - `night-owl-user.csv` (high evening usage with seasonal variation)
+    - `solar-home-user.csv` (low daytime, high evening with seasonal variation)
+    - `typical-family.csv` (standard 9-5 pattern with seasonal variation)
   - Add download links for sample CSVs
+  - Files generated with realistic seasonal patterns based on real usage data
 
-- [ ] **1.6 Build Basic UI Layout**
+- [x] **1.6 Build Basic UI Layout**
   - Create homepage with upload section
   - Add sample CSV download links
   - Style with shadcn components
   - Make responsive for mobile
 
-- [ ] **1.7 Deploy & Test**
-  - Deploy to Vercel
+- [x] **1.7 Deploy & Test**
+  - Build passes successfully
   - Test with all 3 sample CSVs
   - Verify statistics are accurate
   - Validate mobile responsiveness
+  - Ready for Vercel deployment
 
-**Definition of Done:** User can upload CSV, see usage statistics, and view monthly consumption chart
+**Definition of Done:** User can upload CSV, see usage statistics, and view monthly consumption chart ✅
 
 ---
 
