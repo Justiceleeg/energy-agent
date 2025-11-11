@@ -29,6 +29,26 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Environment Variables
+
+This project requires the following environment variables:
+
+- `OPENAI_API_KEY` - Your OpenAI API key (required for AI features)
+  - Get your API key from: https://platform.openai.com/api-keys
+  - Used for usage pattern analysis and plan recommendations
+
+### Local Development
+
+1. Copy `.env.example` to `.env.local`
+2. Add your OpenAI API key to `.env.local`
+
+### Vercel Deployment
+
+1. Go to your project settings in Vercel dashboard
+2. Navigate to "Environment Variables"
+3. Add `OPENAI_API_KEY` with your OpenAI API key value
+4. Deploy or redeploy your application
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
