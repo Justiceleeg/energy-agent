@@ -1,17 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Download } from "lucide-react";
 import { CSVUpload } from "@/components/features/CSVUpload";
 import { UsageInsights } from "@/components/features/UsageInsights";
 import { PlanRecommendations } from "@/components/features/PlanRecommendations";
 import { PlanGrid } from "@/components/features/PlanGrid";
+import { PlanComparisonChart } from "@/components/features/PlanComparisonChart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { HourlyUsageData } from "@/lib/types/usage";
 import { EnergyPlan } from "@/lib/types/plans";
 import { calculateUsageStatistics } from "@/lib/utils/usageStatistics";
 import { rankPlansByCost, getTopRecommendations } from "@/lib/calculations/planRanking";
+import { calculateMonthlyBreakdown, MonthlyCostBreakdown } from "@/lib/calculations/monthlyBreakdown";
 import simplePlans from "@/data/plans/simple-plans.json";
 
 const SAMPLE_FILES = [
@@ -23,6 +25,7 @@ const SAMPLE_FILES = [
 export default function Home() {
   const [usageData, setUsageData] = useState<HourlyUsageData[] | null>(null);
   const [statistics, setStatistics] = useState<ReturnType<typeof calculateUsageStatistics> | null>(null);
+  const [selectedPlanIds, setSelectedPlanIds] = useState<string[]>([]);
 
   const plans = simplePlans as EnergyPlan[];
 
@@ -43,10 +46,62 @@ export default function Home() {
     };
   }, [statistics, plans]);
 
+  // Default to top 3 recommendations when usage data is first available
+  useEffect(() => {
+    if (topThreeIds.length > 0 && selectedPlanIds.length === 0) {
+      setSelectedPlanIds(topThreeIds);
+    }
+  }, [topThreeIds, selectedPlanIds.length]);
+
+  // Calculate monthly breakdowns for selected plans when selection changes
+  const monthlyBreakdowns = useMemo(() => {
+    if (!usageData || !statistics || selectedPlanIds.length === 0) {
+      return new Map<string, MonthlyCostBreakdown[]>();
+    }
+
+    const breakdowns = new Map<string, MonthlyCostBreakdown[]>();
+    selectedPlanIds.forEach((planId) => {
+      const plan = plans.find((p) => p.id === planId);
+      if (plan) {
+        const breakdown = calculateMonthlyBreakdown(plan, usageData, statistics);
+        breakdowns.set(planId, breakdown);
+      }
+    });
+
+    return breakdowns;
+  }, [selectedPlanIds, usageData, statistics, plans]);
+
+  // Get selected plans
+  const selectedPlans = useMemo(() => {
+    return plans.filter((plan) => selectedPlanIds.includes(plan.id));
+  }, [selectedPlanIds, plans]);
+
+  // Clear selection handler
+  const handleClearSelection = () => {
+    setSelectedPlanIds([]);
+  };
+
+  // Handle plan selection/deselection
+  const handlePlanSelect = (planId: string) => {
+    setSelectedPlanIds((current) => {
+      if (current.includes(planId)) {
+        // Remove plan from selection
+        return current.filter((id) => id !== planId);
+      } else {
+        // Add plan to selection (max 3)
+        if (current.length >= 3) {
+          return current; // Don't add if already at max
+        }
+        return [...current, planId];
+      }
+    });
+  };
+
   const handleUploadSuccess = (data: HourlyUsageData[]) => {
     setUsageData(data);
     const stats = calculateUsageStatistics(data);
     setStatistics(stats);
+    setSelectedPlanIds([]); // Reset selection when new data is uploaded
   };
 
   const handleDownloadSample = (filename: string) => {
@@ -129,8 +184,24 @@ export default function Home() {
 
             {statistics && topRecommendations.length > 0 && (
               <div className="space-y-6">
-                <PlanRecommendations recommendations={topRecommendations} />
-                <PlanGrid plans={rankedPlans} topThreeIds={topThreeIds} />
+                <PlanRecommendations
+                  recommendations={topRecommendations}
+                  selectedPlanIds={selectedPlanIds}
+                  onPlanSelect={handlePlanSelect}
+                />
+                {selectedPlans.length > 0 && (
+                  <PlanComparisonChart
+                    selectedPlans={selectedPlans}
+                    monthlyBreakdowns={monthlyBreakdowns}
+                    onClearSelection={handleClearSelection}
+                  />
+                )}
+                <PlanGrid
+                  plans={rankedPlans}
+                  topThreeIds={topThreeIds}
+                  selectedPlanIds={selectedPlanIds}
+                  onPlanSelect={handlePlanSelect}
+                />
               </div>
             )}
           </div>

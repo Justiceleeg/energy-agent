@@ -3,16 +3,29 @@
 import { EnergyPlan, PlanCostResult } from "@/lib/types/plans";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Leaf, Calendar } from "lucide-react";
+import { Leaf, Calendar, Check } from "lucide-react";
 
 interface PlanCardProps {
   plan: EnergyPlan;
   cost: PlanCostResult;
   isCheapest?: boolean;
   savings?: number;
+  isSelected?: boolean;
+  onSelect?: (planId: string) => void;
+  isSelectionDisabled?: boolean;
+  selectionCount?: number;
 }
 
-export function PlanCard({ plan, cost, isCheapest = false, savings }: PlanCardProps) {
+export function PlanCard({
+  plan,
+  cost,
+  isCheapest = false,
+  savings,
+  isSelected = false,
+  onSelect,
+  isSelectionDisabled = false,
+  selectionCount,
+}: PlanCardProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -31,19 +44,45 @@ export function PlanCard({ plan, cost, isCheapest = false, savings }: PlanCardPr
     }).format(value);
   };
 
+  const handleSelect = () => {
+    if (onSelect) {
+      onSelect(plan.id);
+    }
+  };
+
   return (
-    <Card className={isCheapest ? "border-primary border-2" : ""}>
+    <Card
+      className={
+        isSelected
+          ? "border-primary border-2 bg-primary/5"
+          : isCheapest
+            ? "border-primary border-2"
+            : ""
+      }
+    >
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-xl mb-1">{plan.name}</CardTitle>
+            <CardTitle className="text-xl mb-1 flex items-center gap-2">
+              {plan.name}
+              {isSelected && (
+                <Check className="h-5 w-5 text-primary" />
+              )}
+            </CardTitle>
             <CardDescription className="text-sm">{plan.provider}</CardDescription>
           </div>
-          {isCheapest && (
-            <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">
-              Best Value
-            </span>
-          )}
+          <div className="flex flex-col items-end gap-1">
+            {isCheapest && (
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded">
+                Best Value
+              </span>
+            )}
+            {selectionCount !== undefined && (
+              <span className="text-xs text-muted-foreground">
+                {selectionCount}/3 selected
+              </span>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -75,8 +114,13 @@ export function PlanCard({ plan, cost, isCheapest = false, savings }: PlanCardPr
         )}
       </CardContent>
       <CardFooter>
-        <Button variant="outline" className="w-full" disabled>
-          Select to Compare
+        <Button
+          variant={isSelected ? "default" : "outline"}
+          className="w-full"
+          onClick={handleSelect}
+          disabled={isSelectionDisabled && !isSelected}
+        >
+          {isSelected ? "Deselect" : "Select to Compare"}
         </Button>
       </CardFooter>
     </Card>

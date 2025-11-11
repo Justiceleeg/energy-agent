@@ -11,9 +11,16 @@ type SortOption = "cost-asc" | "cost-desc" | "renewable-desc";
 interface PlanGridProps {
   plans: PlanWithCost[];
   topThreeIds: string[];
+  selectedPlanIds?: string[];
+  onPlanSelect?: (planId: string) => void;
 }
 
-export function PlanGrid({ plans, topThreeIds }: PlanGridProps) {
+export function PlanGrid({
+  plans,
+  topThreeIds,
+  selectedPlanIds = [],
+  onPlanSelect,
+}: PlanGridProps) {
   const [sortBy, setSortBy] = useState<SortOption>("cost-asc");
 
   const sortedPlans = useMemo(() => {
@@ -37,7 +44,7 @@ export function PlanGrid({ plans, topThreeIds }: PlanGridProps) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold mb-1">All Plans</h2>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground hidden md:block">
             Compare all available energy plans
           </p>
         </div>
@@ -86,6 +93,10 @@ export function PlanGrid({ plans, topThreeIds }: PlanGridProps) {
               cost={item.cost}
               isCheapest={topThreeIds[0] === item.plan.id}
               savings={item.savings}
+              isSelected={selectedPlanIds.includes(item.plan.id)}
+              onSelect={onPlanSelect}
+              isSelectionDisabled={selectedPlanIds.length >= 3 && !selectedPlanIds.includes(item.plan.id)}
+              selectionCount={selectedPlanIds.length}
             />
           </div>
         ))}

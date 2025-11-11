@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 interface PlanRecommendationsProps {
   recommendations: PlanWithCost[];
+  selectedPlanIds?: string[];
+  onPlanSelect?: (planId: string) => void;
 }
 
 const RECOMMENDATION_LABELS = [
@@ -14,7 +16,11 @@ const RECOMMENDATION_LABELS = [
   "Most renewable",
 ];
 
-export function PlanRecommendations({ recommendations }: PlanRecommendationsProps) {
+export function PlanRecommendations({
+  recommendations,
+  selectedPlanIds = [],
+  onPlanSelect,
+}: PlanRecommendationsProps) {
   if (recommendations.length === 0) {
     return null;
   }
@@ -55,6 +61,10 @@ export function PlanRecommendations({ recommendations }: PlanRecommendationsProp
                 cost={item.cost}
                 isCheapest={index === 0}
                 savings={item.savings}
+                isSelected={selectedPlanIds.includes(item.plan.id)}
+                onSelect={onPlanSelect}
+                isSelectionDisabled={selectedPlanIds.length >= 3 && !selectedPlanIds.includes(item.plan.id)}
+                selectionCount={selectedPlanIds.length}
               />
             </div>
           </div>
