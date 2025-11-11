@@ -58,12 +58,12 @@
 - [x] 1.7.6 Default to top 3 recommendations on initial load
 
 ### 1.8 Testing & Validation
-- [ ] 1.8.1 Test plan selection/deselection with all 3 sample CSV files
-- [ ] 1.8.2 Verify monthly breakdown calculations match expected values
-- [ ] 1.8.3 Test max 3 selection limit enforcement
-- [ ] 1.8.4 Verify chart updates correctly when plans are selected/deselected
-- [ ] 1.8.5 Test chart controls (clear selection, view toggle, legend)
-- [ ] 1.8.6 Validate mobile responsiveness of chart and controls
-- [ ] 1.8.7 Test edge cases (0 plans selected, 1 plan selected, 3 plans selected)
-- [ ] 1.8.8 Deploy to Vercel and verify functionality
+- [x] 1.8.1 Test plan selection/deselection with all 3 sample CSV files
+- [x] 1.8.2 Verify monthly breakdown calculations match expected values
+- [x] 1.8.3 Test max 3 selection limit enforcement
+- [x] 1.8.4 Verify chart updates correctly when plans are selected/deselected
+- [x] 1.8.5 Test chart controls (clear selection, view toggle, legend)
+- [x] 1.8.6 Validate mobile responsiveness of chart and controls
+- [x] 1.8.7 Test edge cases (0 plans selected, 1 plan selected, 3 plans selected)
+- [x] 1.8.8 Deploy to Vercel and verify functionality
 
