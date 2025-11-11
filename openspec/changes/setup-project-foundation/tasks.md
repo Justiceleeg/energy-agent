@@ -30,9 +30,9 @@
   - [x] Create `/data/plans` directory
   - [x] Create `/data/sample-csvs` directory
 
-- [ ] 1.5 Deploy to Vercel
-  - [ ] Connect GitHub repository to Vercel
-  - [ ] Configure environment variables in Vercel dashboard
-  - [ ] Deploy and verify basic functionality (homepage loads)
-  - [ ] Set up preview deployments for feature branches
+- [x] 1.5 Deploy to Vercel
+  - [x] Connect GitHub repository to Vercel
+  - [x] Configure environment variables in Vercel dashboard
+  - [x] Deploy and verify basic functionality (homepage loads)
+  - [ ] Set up preview deployments for feature branches (not needed for slice 0)
 
