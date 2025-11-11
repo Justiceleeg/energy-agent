@@ -39,3 +39,33 @@ The system SHALL provide a `calculatePlanCost()` function that accepts a plan an
 - **THEN** the function accepts an `EnergyPlan` and `HourlyUsageData[]` or `UsageStatistics`
 - **AND** returns a `PlanCostResult` with annualCost, monthlyCost, and cost breakdown
 
+### Requirement: Monthly Breakdown Calculation
+The system SHALL calculate per-month costs for an energy plan based on monthly usage data, accounting for seasonal variations in consumption.
+
+#### Scenario: Monthly breakdown calculation
+- **WHEN** calculating monthly breakdown for a plan
+- **THEN** the function accepts an `EnergyPlan`, `HourlyUsageData[]`, and `UsageStatistics` as parameters
+- **AND** groups hourly usage data by month (0-11, where January = 0)
+- **AND** calculates total kWh consumption for each month
+- **AND** calculates plan cost for each month using monthly kWh totals
+
+#### Scenario: Monthly cost calculation
+- **WHEN** calculating cost for a specific month
+- **THEN** energy cost is calculated using the plan's pricing rules applied to that month's kWh
+- **AND** base charges are calculated as `baseCharge` (monthly) for that month
+- **AND** TDU charges are calculated as `$4.50 + ($0.035 × monthlyKwh)` for that month
+- **AND** the total monthly cost includes all charges (energy, base, TDU)
+
+#### Scenario: Monthly breakdown result
+- **WHEN** calculating monthly breakdown
+- **THEN** the function returns an array of monthly cost objects
+- **AND** each object contains month index (0-11), month name (string), total kWh for that month, and total cost for that month
+- **AND** the array contains 12 entries (one for each month)
+- **AND** months with zero usage still have entries with zero cost
+
+#### Scenario: Monthly breakdown function interface
+- **WHEN** calling `calculateMonthlyBreakdown(plan, usageData, statistics)`
+- **THEN** the function accepts an `EnergyPlan`, `HourlyUsageData[]`, and `UsageStatistics`
+- **AND** returns an array of monthly cost objects with month index, month name, totalKWh, and cost
+- **AND** handles edge cases (empty months, invalid data) gracefully
+
