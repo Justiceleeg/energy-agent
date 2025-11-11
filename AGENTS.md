@@ -16,3 +16,8 @@ Use `@/openspec/AGENTS.md` to learn:
 Keep this managed block so 'openspec update' can refresh the instructions.
 
 <!-- OPENSPEC:END -->
+
+**Git Operations:**
+- Do NOT commit to git unless explicitly told to do so
+- Do NOT push to git unless explicitly told to do so
+- Wait for explicit permission before each commit/push operation
