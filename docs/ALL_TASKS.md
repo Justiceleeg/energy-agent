@@ -10,6 +10,8 @@
 
 This task list is organized into deployable vertical slices. Each slice delivers a working feature that can be deployed and validated before moving to the next slice. The goal is to start simple and progressively add complexity while maintaining a functional demo at every stage.
 
+**Related Documentation:** For detailed technical architecture, data models, API design, and implementation patterns, see [`ARCHITECTURE.md`](./ARCHITECTURE.md).
+
 ---
 
 ## 🎯 Slice 0: Project Setup & Foundation

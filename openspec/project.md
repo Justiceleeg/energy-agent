@@ -10,6 +10,12 @@ The AI Energy Plan Recommendation Agent is a Next.js web application that helps 
 
 This is an ephemeral demo application with no user authentication or data persistence.
 
+## Related Documentation
+
+For comprehensive technical details, see:
+- **Architecture & Design:** [`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - Complete system architecture, data models, API design, calculation engine, AI integration strategy, and implementation patterns
+- **Task List:** [`docs/ALL_TASKS.md`](../docs/ALL_TASKS.md) - Detailed implementation tasks organized by vertical slices
+
 ## Tech Stack
 - **Framework:** Next.js 16.0.1 (App Router)
 - **UI Library:** React 19.2.0
