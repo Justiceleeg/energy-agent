@@ -3,7 +3,7 @@
 import { EnergyPlan, PlanCostResult } from "@/lib/types/plans";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Leaf, Calendar, Check } from "lucide-react";
+import { Leaf, Calendar } from "lucide-react";
 
 interface PlanCardProps {
   plan: EnergyPlan;
@@ -61,13 +61,10 @@ export function PlanCard({
       }
     >
       <CardHeader>
-        <div className="flex items-start justify-between">
+        <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-xl mb-1 flex items-center gap-2">
+            <CardTitle className="text-xl mb-1">
               {plan.name}
-              {isSelected && (
-                <Check className="h-5 w-5 text-primary" />
-              )}
             </CardTitle>
             <CardDescription className="text-sm">{plan.provider}</CardDescription>
           </div>

@@ -80,25 +80,17 @@ export function PlanGrid({
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {sortedPlans.map((item) => (
-          <div
+          <PlanCard
             key={item.plan.id}
-            className={
-              topThreeIds.includes(item.plan.id)
-                ? "ring-2 ring-primary/30 rounded-xl p-1"
-                : ""
-            }
-          >
-            <PlanCard
-              plan={item.plan}
-              cost={item.cost}
-              isCheapest={topThreeIds[0] === item.plan.id}
-              savings={item.savings}
-              isSelected={selectedPlanIds.includes(item.plan.id)}
-              onSelect={onPlanSelect}
-              isSelectionDisabled={selectedPlanIds.length >= 3 && !selectedPlanIds.includes(item.plan.id)}
-              selectionCount={selectedPlanIds.length}
-            />
-          </div>
+            plan={item.plan}
+            cost={item.cost}
+            isCheapest={topThreeIds[0] === item.plan.id}
+            savings={item.savings}
+            isSelected={selectedPlanIds.includes(item.plan.id)}
+            onSelect={onPlanSelect}
+            isSelectionDisabled={selectedPlanIds.length >= 3 && !selectedPlanIds.includes(item.plan.id)}
+            selectionCount={selectedPlanIds.length}
+          />
         ))}
       </div>
     </div>

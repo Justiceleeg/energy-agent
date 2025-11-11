@@ -1,6 +1,7 @@
 "use client";
 
 import { UsageStatistics } from "@/lib/types/usage";
+import { UsageAnalysisInsights } from "@/lib/types/ai";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   BarChart,
@@ -12,12 +13,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { format } from "date-fns";
+import { Clock, Calendar, Lightbulb, Loader2 } from "lucide-react";
 
 interface UsageInsightsProps {
   statistics: UsageStatistics;
+  aiInsights?: UsageAnalysisInsights | null;
+  isLoadingAI?: boolean;
 }
 
-export function UsageInsights({ statistics }: UsageInsightsProps) {
+export function UsageInsights({ statistics, aiInsights, isLoadingAI }: UsageInsightsProps) {
   const formatKWh = (value: number) => {
     return `${value.toLocaleString(undefined, { maximumFractionDigits: 0 })} kWh`;
   };
@@ -163,6 +167,102 @@ export function UsageInsights({ statistics }: UsageInsightsProps) {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+
+      {/* AI Insights Section */}
+      {(aiInsights || isLoadingAI) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>AI-Powered Usage Insights</CardTitle>
+            <CardDescription>
+              Personalized analysis of your energy consumption patterns
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoadingAI ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-primary mr-2" />
+                <span className="text-muted-foreground">Analyzing your usage patterns...</span>
+              </div>
+            ) : aiInsights ? (
+              <div className="space-y-6">
+                {/* Peak Times */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-primary" />
+                    <h3 className="font-semibold text-lg">Peak Usage Times</h3>
+                  </div>
+                  <p className="text-muted-foreground">{aiInsights.peakTimes.description}</p>
+                  {aiInsights.peakTimes.insights.length > 0 && (
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
+                      {aiInsights.peakTimes.insights.map((insight, index) => (
+                        <li key={index}>{insight}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                {/* Seasonal Trends */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5 text-primary" />
+                    <h3 className="font-semibold text-lg">Seasonal Trends</h3>
+                  </div>
+                  <p className="text-muted-foreground">{aiInsights.seasonalTrends.description}</p>
+                  {aiInsights.seasonalTrends.insights.length > 0 && (
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
+                      {aiInsights.seasonalTrends.insights.map((insight, index) => (
+                        <li key={index}>{insight}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                {/* Weekday/Weekend Patterns (if available) */}
+                {aiInsights.weekdayWeekendPatterns && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-primary" />
+                      <h3 className="font-semibold text-lg">Weekday vs Weekend Patterns</h3>
+                    </div>
+                    <p className="text-muted-foreground">
+                      {aiInsights.weekdayWeekendPatterns.description}
+                    </p>
+                    {aiInsights.weekdayWeekendPatterns.insights.length > 0 && (
+                      <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
+                        {aiInsights.weekdayWeekendPatterns.insights.map((insight, index) => (
+                          <li key={index}>{insight}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+
+                {/* Recommendations */}
+                {aiInsights.recommendations.length > 0 && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5 text-primary" />
+                      <h3 className="font-semibold text-lg">Actionable Recommendations</h3>
+                    </div>
+                    <div className="space-y-3">
+                      {aiInsights.recommendations.map((rec, index) => (
+                        <Card key={index} className="bg-accent/50">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-base">{rec.title}</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm text-muted-foreground">{rec.description}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
