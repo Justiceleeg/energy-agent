@@ -1,0 +1,303 @@
+[
+  {
+    "id": "plan-001",
+    "name": "Green Energy Basic",
+    "provider": "EcoPower",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.10
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "100% renewable energy at competitive rates"
+  },
+  {
+    "id": "plan-002",
+    "name": "Standard Plus",
+    "provider": "EnergyCo",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.12
+      }
+    ],
+    "baseCharge": 5.00,
+    "renewablePercent": 0,
+    "contractLength": 12,
+    "description": "Reliable standard plan with low base charge"
+  },
+  {
+    "id": "plan-003",
+    "name": "Budget Saver",
+    "provider": "ValueEnergy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.11
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 25,
+    "contractLength": 6,
+    "description": "Low-cost option with short-term commitment"
+  },
+  {
+    "id": "plan-004",
+    "name": "Premium Green",
+    "provider": "SolarGrid",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.15
+      }
+    ],
+    "baseCharge": 10.00,
+    "renewablePercent": 100,
+    "contractLength": 24,
+    "description": "Premium renewable energy with long-term savings"
+  },
+  {
+    "id": "plan-005",
+    "name": "Flexible Choice",
+    "provider": "PowerFlex",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.13
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 50,
+    "contractLength": 12,
+    "description": "Balanced plan with moderate renewable content"
+  },
+  {
+    "id": "plan-006",
+    "name": "Economy Rate",
+    "provider": "BudgetPower",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.105
+      }
+    ],
+    "baseCharge": 3.00,
+    "renewablePercent": 0,
+    "contractLength": 6,
+    "description": "Most affordable option for budget-conscious consumers"
+  },
+  {
+    "id": "plan-007",
+    "name": "Clean Energy Pro",
+    "provider": "GreenTech",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.14
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "100% renewable energy without base charges"
+  },
+  {
+    "id": "plan-008",
+    "name": "Long-Term Value",
+    "provider": "StableEnergy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.125
+      }
+    ],
+    "baseCharge": 7.50,
+    "renewablePercent": 30,
+    "contractLength": 24,
+    "description": "Lock in rates for two years with moderate renewable"
+  },
+  {
+    "id": "plan-009",
+    "name": "Quick Start",
+    "provider": "FastPower",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.115
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 15,
+    "contractLength": 6,
+    "description": "Short-term commitment with competitive rates"
+  },
+  {
+    "id": "plan-010",
+    "name": "Eco Balance",
+    "provider": "NatureEnergy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.135
+      }
+    ],
+    "baseCharge": 4.00,
+    "renewablePercent": 75,
+    "contractLength": 12,
+    "description": "High renewable content at reasonable rates"
+  },
+  {
+    "id": "plan-011",
+    "name": "Ultra Low Rate",
+    "provider": "DiscountEnergy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.102
+      }
+    ],
+    "baseCharge": 2.00,
+    "renewablePercent": 0,
+    "contractLength": 12,
+    "description": "Lowest rate available with minimal base charge"
+  },
+  {
+    "id": "plan-012",
+    "name": "Solar Premium",
+    "provider": "SunPower Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.16
+      }
+    ],
+    "baseCharge": 8.00,
+    "renewablePercent": 100,
+    "contractLength": 24,
+    "description": "Premium solar energy with guaranteed rates"
+  },
+  {
+    "id": "plan-013",
+    "name": "Standard Rate",
+    "provider": "TraditionalPower",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.12
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 0,
+    "contractLength": 12,
+    "description": "Traditional energy plan with no frills"
+  },
+  {
+    "id": "plan-014",
+    "name": "Green Starter",
+    "provider": "EcoFirst",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.13
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 60,
+    "contractLength": 6,
+    "description": "Entry-level renewable plan with short commitment"
+  },
+  {
+    "id": "plan-015",
+    "name": "Value Plus",
+    "provider": "SmartEnergy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.11
+      }
+    ],
+    "baseCharge": 6.00,
+    "renewablePercent": 20,
+    "contractLength": 12,
+    "description": "Good value with moderate renewable energy"
+  },
+  {
+    "id": "plan-016",
+    "name": "Wind Power Special",
+    "provider": "WindForce",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.145
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "100% wind-powered energy plan"
+  },
+  {
+    "id": "plan-017",
+    "name": "Budget Long-Term",
+    "provider": "SaveMore Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.108
+      }
+    ],
+    "baseCharge": 1.50,
+    "renewablePercent": 0,
+    "contractLength": 24,
+    "description": "Long-term budget plan with minimal base charge"
+  },
+  {
+    "id": "plan-018",
+    "name": "Hybrid Energy",
+    "provider": "MixPower",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.128
+      }
+    ],
+    "baseCharge": 5.50,
+    "renewablePercent": 40,
+    "contractLength": 12,
+    "description": "Balanced mix of traditional and renewable energy"
+  },
+  {
+    "id": "plan-019",
+    "name": "Elite Green",
+    "provider": "PremiumGreen",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.18
+      }
+    ],
+    "baseCharge": 12.00,
+    "renewablePercent": 100,
+    "contractLength": 24,
+    "description": "Premium renewable energy with all the benefits"
+  },
+  {
+    "id": "plan-020",
+    "name": "Simple Choice",
+    "provider": "EasyEnergy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.125
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 35,
+    "contractLength": 12,
+    "description": "Simple, straightforward plan with moderate renewable"
+  }
+]
+

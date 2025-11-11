@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Download } from "lucide-react";
 import { CSVUpload } from "@/components/features/CSVUpload";
 import { UsageInsights } from "@/components/features/UsageInsights";
+import { PlanRecommendations } from "@/components/features/PlanRecommendations";
+import { PlanGrid } from "@/components/features/PlanGrid";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { HourlyUsageData } from "@/lib/types/usage";
+import { EnergyPlan } from "@/lib/types/plans";
 import { calculateUsageStatistics } from "@/lib/utils/usageStatistics";
+import { rankPlansByCost, getTopRecommendations } from "@/lib/calculations/planRanking";
+import simplePlans from "@/data/plans/simple-plans.json";
 
 const SAMPLE_FILES = [
   { name: "Night Owl User", file: "night-owl-user.csv", description: "High evening usage pattern" },
@@ -18,6 +23,25 @@ const SAMPLE_FILES = [
 export default function Home() {
   const [usageData, setUsageData] = useState<HourlyUsageData[] | null>(null);
   const [statistics, setStatistics] = useState<ReturnType<typeof calculateUsageStatistics> | null>(null);
+
+  const plans = simplePlans as EnergyPlan[];
+
+  // Calculate plan costs and rankings when usage data is available
+  const { rankedPlans, topRecommendations, topThreeIds } = useMemo(() => {
+    if (!statistics) {
+      return { rankedPlans: [], topRecommendations: [], topThreeIds: [] };
+    }
+
+    const ranked = rankPlansByCost(plans, statistics.totalAnnualKWh);
+    const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh);
+    const topThreeIds = topThree.map((item) => item.plan.id);
+
+    return {
+      rankedPlans: ranked,
+      topRecommendations: topThree,
+      topThreeIds,
+    };
+  }, [statistics, plans]);
 
   const handleUploadSuccess = (data: HourlyUsageData[]) => {
     setUsageData(data);
@@ -102,6 +126,13 @@ export default function Home() {
             </div>
 
             {statistics && <UsageInsights statistics={statistics} />}
+
+            {statistics && topRecommendations.length > 0 && (
+              <div className="space-y-6">
+                <PlanRecommendations recommendations={topRecommendations} />
+                <PlanGrid plans={rankedPlans} topThreeIds={topThreeIds} />
+              </div>
+            )}
           </div>
         )}
       </main>
