@@ -101,7 +101,7 @@ Write all insights in plain, conversational language that a homeowner can unders
         model: openai("gpt-4o-mini"),
         prompt: prompt,
         temperature: 0.7,
-        maxTokens: 2000,
+        maxOutputTokens: 2000,
         abortSignal: controller.signal,
       });
 
