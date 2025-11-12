@@ -82,6 +82,26 @@ The system SHALL display usage statistics and visualizations to help users under
 - **THEN** the upload interface is replaced with usage insights
 - **AND** statistics and chart are displayed immediately after parsing
 
+#### Scenario: AI insights display
+- **WHEN** AI analysis is available (either from API or cache)
+- **THEN** AI-generated insights are displayed in a dedicated section
+- **AND** insights include peak usage time patterns with icons
+- **AND** insights include seasonal trends with icons
+- **AND** insights include actionable recommendations with icons
+- **AND** all insights are formatted in readable cards
+
+#### Scenario: AI insights loading state
+- **WHEN** AI analysis is in progress
+- **THEN** a loading indicator is displayed in the AI insights section
+- **AND** the loading state is clearly visible to the user
+- **AND** basic statistics and chart are still displayed (not blocked by AI loading)
+
+#### Scenario: AI insights error state
+- **WHEN** AI analysis fails or is unavailable
+- **THEN** the AI insights section is not displayed or shows an error message
+- **AND** basic statistics and chart continue to function normally
+- **AND** the page remains fully functional without AI insights
+
 ### Requirement: Sample CSV Files
 The system SHALL provide sample CSV files for users to download and test the application.
 
