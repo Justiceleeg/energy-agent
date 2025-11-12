@@ -131,6 +131,17 @@ export function UsageInsights({ statistics, aiInsights, isLoadingAI }: UsageInsi
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <style dangerouslySetInnerHTML={{__html: `
+            .recharts-tooltip-cursor {
+              fill: #fef9e8 !important;
+            }
+            .recharts-active-bar {
+              fill: #fef9e8 !important;
+            }
+            .recharts-bar-rectangle:hover {
+              fill: #fef9e8 !important;
+            }
+          `}} />
           <div className="w-full h-[350px] min-h-[350px] min-w-0">
             <ResponsiveContainer width="100%" height="100%" minHeight={350} minWidth={0}>
               <BarChart
@@ -153,15 +164,23 @@ export function UsageInsights({ statistics, aiInsights, isLoadingAI }: UsageInsi
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--background))",
+                  backgroundColor: "hsl(var(--foreground))",
+                  color: "hsl(var(--background))",
                   border: "1px solid hsl(var(--border))",
                   borderRadius: "8px",
                 }}
+                labelStyle={{
+                  color: "hsl(var(--background))",
+                }}
+                itemStyle={{
+                  color: "hsl(var(--background))",
+                }}
+                cursor={{ fill: "#fef9e8" }}
                 formatter={(value: number) => [formatKWh(value), "Consumption"]}
               />
               <Bar
                 dataKey="totalKWh"
-                fill="hsl(var(--primary))"
+                fill="#f5c842"
                 radius={[4, 4, 0, 0]}
               />
               </BarChart>
