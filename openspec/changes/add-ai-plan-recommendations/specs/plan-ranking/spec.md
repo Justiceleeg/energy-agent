@@ -77,3 +77,4 @@ The system SHALL allow users to select a preference (cost, flexibility, renewabl
 - **THEN** preference defaults to "cost" (cost-optimized)
 - **AND** plans are ranked by cost initially
 
+

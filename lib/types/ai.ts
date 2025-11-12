@@ -39,3 +39,39 @@ export interface UsageAnalysisInsights {
   };
 }
 
+/**
+ * User preference for plan ranking
+ */
+export type UserPreference = "cost" | "flexibility" | "renewable";
+
+/**
+ * AI-generated plan recommendation with personalized explanation
+ */
+export interface PlanRecommendation {
+  /** Plan ID this recommendation is for */
+  planId: string;
+  /** Personalized explanation of why this plan is recommended */
+  explanation: string;
+  /** List of advantages specific to the user's usage patterns */
+  pros: string[];
+  /** List of disadvantages specific to the user's usage patterns */
+  cons: string[];
+  /** "Good for" badges based on usage patterns (e.g., "night owl", "solar home") */
+  goodFor?: string[];
+}
+
+/**
+ * API response for plan recommendations
+ */
+export interface PlanRecommendationsResponse {
+  /** Array of recommendations for top 3 plans */
+  recommendations: PlanRecommendation[];
+  /** Metadata about the recommendations */
+  metadata: {
+    /** Model used for recommendations */
+    model: string;
+    /** Timestamp when recommendations were generated */
+    timestamp: string;
+  };
+}
+

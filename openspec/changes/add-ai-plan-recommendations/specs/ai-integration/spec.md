@@ -78,3 +78,4 @@ The system SHALL cache AI-generated recommendations in session storage to avoid 
 - **THEN** the system falls back to making an API call
 - **AND** errors are handled gracefully without breaking the page
 
+

@@ -1,7 +1,8 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateText } from "ai";
+import { generateObject } from "ai";
 import { UsageStatistics } from "@/lib/types/usage";
 import { UsageAnalysisInsights } from "@/lib/types/ai";
+import { UsageAnalysisInsightsSchema } from "./schemas";
 
 const openai = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -49,37 +50,6 @@ Usage Statistics Summary:
 Monthly Breakdown:
 ${monthlyBreakdownText}
 
-Please provide insights in the following JSON structure:
-{
-  "peakTimes": {
-    "description": "A brief overview of when peak usage occurs (e.g., 'Your energy usage peaks in the evening hours between 6-9 PM')",
-    "insights": [
-      "Specific insight about peak hour patterns",
-      "Specific insight about day of week patterns if relevant"
-    ]
-  },
-  "seasonalTrends": {
-    "description": "A brief overview of seasonal patterns (e.g., 'Your energy usage is highest in summer months')",
-    "insights": [
-      "Specific insight about summer vs winter patterns",
-      "Specific insight about monthly variations"
-    ]
-  },
-  "weekdayWeekendPatterns": {
-    "description": "A brief overview of weekday vs weekend differences if significant",
-    "insights": [
-      "Specific insight about weekday patterns",
-      "Specific insight about weekend patterns"
-    ]
-  },
-  "recommendations": [
-    {
-      "title": "Short recommendation title",
-      "description": "Detailed, actionable recommendation in plain language"
-    }
-  ]
-}
-
 Focus on:
 1. Peak usage times: Identify patterns in hour of day and day of week
 2. Seasonal trends: Compare summer vs winter, identify monthly variations
@@ -97,49 +67,20 @@ Write all insights in plain, conversational language that a homeowner can unders
     let isAborted = false;
 
     try {
-      const { text } = await generateText({
+      const { object } = await generateObject({
         model: openai("gpt-4o-mini"),
+        schema: UsageAnalysisInsightsSchema,
+        schemaName: "UsageAnalysisInsights",
+        schemaDescription: "Energy usage analysis insights with peak times, seasonal trends, and recommendations",
         prompt: prompt,
         temperature: 0.7,
-        maxOutputTokens: 2000,
-        abortSignal: controller.signal,
       });
 
       clearTimeout(timeoutId);
 
-      if (!text) {
-        throw new Error("No response content from OpenAI API");
-      }
-
-      // Try to parse JSON, extract if wrapped in markdown code blocks
-      let jsonText = text.trim();
-      // Remove markdown code blocks if present
-      if (jsonText.startsWith("```")) {
-        const match = jsonText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-        if (match) {
-          jsonText = match[1].trim();
-        }
-      }
-
-      const parsed = JSON.parse(jsonText);
-
-      // Validate and structure the response
+      // Structure the response with metadata
       const insights: UsageAnalysisInsights = {
-        peakTimes: {
-          description: parsed.peakTimes?.description || "No peak time analysis available",
-          insights: parsed.peakTimes?.insights || [],
-        },
-        seasonalTrends: {
-          description: parsed.seasonalTrends?.description || "No seasonal analysis available",
-          insights: parsed.seasonalTrends?.insights || [],
-        },
-        weekdayWeekendPatterns: parsed.weekdayWeekendPatterns
-          ? {
-              description: parsed.weekdayWeekendPatterns.description || "",
-              insights: parsed.weekdayWeekendPatterns.insights || [],
-            }
-          : undefined,
-        recommendations: parsed.recommendations || [],
+        ...object,
         metadata: {
           model: "gpt-4o-mini",
           timestamp: new Date().toISOString(),
@@ -162,13 +103,16 @@ Write all insights in plain, conversational language that a homeowner can unders
         break;
       }
 
-      // Only retry on transient errors (network errors, rate limits)
+      // Retry on transient errors (network errors, rate limits) and validation errors
+      // Validation errors might be due to incomplete responses or schema mismatches
       if (
         lastError.message.includes("rate limit") ||
         lastError.message.includes("timeout") ||
         lastError.message.includes("network") ||
         lastError.message.includes("ECONNRESET") ||
-        lastError.message.includes("aborted")
+        lastError.message.includes("aborted") ||
+        lastError.message.includes("NoObjectGenerated") ||
+        lastError.message.includes("validation")
       ) {
         // Wait before retrying (exponential backoff)
         await new Promise((resolve) => setTimeout(resolve, Math.pow(2, attempt) * 1000));

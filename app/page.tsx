@@ -1,23 +1,25 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Download } from "lucide-react";
 import { CSVUpload } from "@/components/features/CSVUpload";
 import { UsageInsights } from "@/components/features/UsageInsights";
 import { PlanRecommendations } from "@/components/features/PlanRecommendations";
+import { PreferenceSelector } from "@/components/features/PreferenceSelector";
 import { PlanGrid } from "@/components/features/PlanGrid";
 import { PlanComparisonChart } from "@/components/features/PlanComparisonChart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { HourlyUsageData } from "@/lib/types/usage";
 import { EnergyPlan } from "@/lib/types/plans";
-import { UsageAnalysisInsights } from "@/lib/types/ai";
+import { UsageAnalysisInsights, PlanRecommendation, PlanRecommendationsResponse, UserPreference } from "@/lib/types/ai";
 import { calculateUsageStatistics } from "@/lib/utils/usageStatistics";
 import { rankPlansByCost, getTopRecommendations } from "@/lib/calculations/planRanking";
 import { calculateMonthlyBreakdown, MonthlyCostBreakdown } from "@/lib/calculations/monthlyBreakdown";
 import simplePlans from "@/data/plans/simple-plans.json";
 
-const CACHE_KEY_PREFIX = "ai_insights_";
+const CACHE_KEY_PREFIX_INSIGHTS = "ai_insights_";
+const CACHE_KEY_PREFIX_RECOMMENDATIONS = "ai_recommendations_";
 
 const SAMPLE_FILES = [
   { name: "Night Owl User", file: "night-owl-user.csv", description: "High evening usage pattern" },
@@ -29,8 +31,16 @@ export default function Home() {
   const [usageData, setUsageData] = useState<HourlyUsageData[] | null>(null);
   const [statistics, setStatistics] = useState<ReturnType<typeof calculateUsageStatistics> | null>(null);
   const [selectedPlanIds, setSelectedPlanIds] = useState<string[]>([]);
+  const [preference, setPreference] = useState<UserPreference>("cost");
   const [aiInsights, setAiInsights] = useState<UsageAnalysisInsights | null>(null);
+  const [aiRecommendations, setAiRecommendations] = useState<PlanRecommendation[] | null>(null);
+  // Store recommendations for all preferences
+  const [allRecommendations, setAllRecommendations] = useState<Map<UserPreference, PlanRecommendation[]>>(new Map());
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
+  const [loadingPreferences, setLoadingPreferences] = useState<Set<UserPreference>>(new Set());
+  // Track which statistics key we've already fetched for to prevent re-fetching
+  const fetchedStatisticsKey = useRef<string | null>(null);
 
   const plans = simplePlans as EnergyPlan[];
 
@@ -40,8 +50,8 @@ export default function Home() {
       return { rankedPlans: [], topRecommendations: [], topThreeIds: [] };
     }
 
-    const ranked = rankPlansByCost(plans, statistics.totalAnnualKWh, statistics);
-    const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh, statistics);
+    const ranked = rankPlansByCost(plans, statistics.totalAnnualKWh, statistics, preference);
+    const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh, statistics, preference);
     const topThreeIds = topThree.map((item) => item.plan.id);
 
     return {
@@ -49,6 +59,29 @@ export default function Home() {
       topRecommendations: topThree,
       topThreeIds,
     };
+  }, [statistics, plans, preference]);
+
+  // Calculate top recommendations for ALL preferences (for background fetching)
+  // Use a stable key to prevent unnecessary re-renders
+  const allTopRecommendationsKey = useMemo(() => {
+    if (!statistics) return null;
+    return `${statistics.totalAnnualKWh.toFixed(1)}_${statistics.monthlyBreakdown.map(m => m.totalKWh.toFixed(1)).join(',')}`;
+  }, [statistics]);
+  
+  const allTopRecommendations = useMemo(() => {
+    if (!statistics) {
+      return new Map<UserPreference, PlanWithCost[]>();
+    }
+
+    const preferences: UserPreference[] = ["cost", "flexibility", "renewable"];
+    const map = new Map<UserPreference, PlanWithCost[]>();
+
+    preferences.forEach((pref) => {
+      const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh, statistics, pref);
+      map.set(pref, topThree);
+    });
+
+    return map;
   }, [statistics, plans]);
 
   // Default to top 3 recommendations when usage data is first available
@@ -103,14 +136,27 @@ export default function Home() {
   };
 
   // Generate cache key from usage statistics
-  const generateCacheKey = (stats: ReturnType<typeof calculateUsageStatistics>): string => {
+  const generateInsightsCacheKey = (stats: ReturnType<typeof calculateUsageStatistics>): string => {
     // Create a signature from total annual kWh and monthly breakdown
     const monthlySignature = stats.monthlyBreakdown
       .map((m) => `${m.month}:${m.totalKWh.toFixed(1)}`)
       .join(",");
     const signature = `${stats.totalAnnualKWh.toFixed(1)}_${monthlySignature}`;
-    // Simple hash (for cache key, not cryptographic)
-    return `${CACHE_KEY_PREFIX}${signature}`;
+    return `${CACHE_KEY_PREFIX_INSIGHTS}${signature}`;
+  };
+
+  // Generate cache key for recommendations (includes preference and top 3 plan IDs)
+  const generateRecommendationsCacheKey = (
+    stats: ReturnType<typeof calculateUsageStatistics>,
+    pref: UserPreference,
+    planIds: string[]
+  ): string => {
+    const monthlySignature = stats.monthlyBreakdown
+      .map((m) => `${m.month}:${m.totalKWh.toFixed(1)}`)
+      .join(",");
+    const planIdsSignature = planIds.sort().join(",");
+    const signature = `${stats.totalAnnualKWh.toFixed(1)}_${monthlySignature}_${pref}_${planIdsSignature}`;
+    return `${CACHE_KEY_PREFIX_RECOMMENDATIONS}${signature}`;
   };
 
   // Get cached insights from session storage
@@ -129,6 +175,23 @@ export default function Home() {
     return null;
   };
 
+  // Get cached recommendations from session storage
+  const getCachedRecommendations = (cacheKey: string): PlanRecommendation[] | null => {
+    try {
+      if (typeof window === "undefined" || !window.sessionStorage) {
+        return null;
+      }
+      const cached = window.sessionStorage.getItem(cacheKey);
+      if (cached) {
+        const data = JSON.parse(cached) as PlanRecommendationsResponse;
+        return data.recommendations || null;
+      }
+    } catch (error) {
+      console.warn("Failed to read recommendations from session storage:", error);
+    }
+    return null;
+  };
+
   // Store insights in session storage
   const setCachedInsights = (cacheKey: string, insights: UsageAnalysisInsights): void => {
     try {
@@ -141,17 +204,29 @@ export default function Home() {
     }
   };
 
-  // Clear AI insights cache
+  // Store recommendations in session storage
+  const setCachedRecommendations = (cacheKey: string, recommendations: PlanRecommendationsResponse): void => {
+    try {
+      if (typeof window === "undefined" || !window.sessionStorage) {
+        return;
+      }
+      window.sessionStorage.setItem(cacheKey, JSON.stringify(recommendations));
+    } catch (error) {
+      console.warn("Failed to write recommendations to session storage:", error);
+    }
+  };
+
+  // Clear AI cache (both insights and recommendations)
   const clearAICache = (): void => {
     try {
       if (typeof window === "undefined" || !window.sessionStorage) {
         return;
       }
-      // Clear all cache entries with our prefix
+      // Clear all cache entries with our prefixes
       const keysToRemove: string[] = [];
       for (let i = 0; i < window.sessionStorage.length; i++) {
         const key = window.sessionStorage.key(i);
-        if (key && key.startsWith(CACHE_KEY_PREFIX)) {
+        if (key && (key.startsWith(CACHE_KEY_PREFIX_INSIGHTS) || key.startsWith(CACHE_KEY_PREFIX_RECOMMENDATIONS))) {
           keysToRemove.push(key);
         }
       }
@@ -162,8 +237,7 @@ export default function Home() {
   };
 
   // Fetch AI insights from API
-  const fetchAIInsights = async (stats: ReturnType<typeof calculateUsageStatistics>): Promise<void> => {
-    setIsLoadingAI(true);
+  const fetchAIInsights = async (stats: ReturnType<typeof calculateUsageStatistics>): Promise<UsageAnalysisInsights | null> => {
     try {
       const response = await fetch("/api/analyze", {
         method: "POST",
@@ -179,17 +253,58 @@ export default function Home() {
       }
 
       const insights = (await response.json()) as UsageAnalysisInsights;
-      setAiInsights(insights);
 
       // Cache the insights
-      const cacheKey = generateCacheKey(stats);
+      const cacheKey = generateInsightsCacheKey(stats);
       setCachedInsights(cacheKey, insights);
+
+      return insights;
     } catch (error) {
       console.error("Failed to fetch AI insights:", error);
-      // Don't set error state - just don't show AI insights
-      // The page should continue to function without AI insights
-    } finally {
-      setIsLoadingAI(false);
+      // Don't throw - return null to allow page to continue functioning
+      return null;
+    }
+  };
+
+  // Fetch AI recommendations from API
+  const fetchAIRecommendations = async (
+    stats: ReturnType<typeof calculateUsageStatistics>,
+    topPlans: typeof topRecommendations,
+    pref: UserPreference
+  ): Promise<PlanRecommendation[] | null> => {
+    try {
+      const response = await fetch("/api/recommendations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          statistics: stats,
+          plans: topPlans.map((item) => ({
+            plan: item.plan,
+            cost: item.cost,
+          })),
+          preference: pref,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `API error: ${response.status}`);
+      }
+
+      const data = (await response.json()) as PlanRecommendationsResponse;
+
+      // Cache the recommendations
+      const planIds = topPlans.map((item) => item.plan.id);
+      const cacheKey = generateRecommendationsCacheKey(stats, pref, planIds);
+      setCachedRecommendations(cacheKey, data);
+
+      return data.recommendations;
+    } catch (error) {
+      console.error("Failed to fetch AI recommendations:", error);
+      // Don't throw - return null to allow page to continue functioning
+      return null;
     }
   };
 
@@ -201,30 +316,221 @@ export default function Home() {
       return;
     }
 
-    // Check cache first
-    const cacheKey = generateCacheKey(statistics);
-    const cached = getCachedInsights(cacheKey);
+    // Check cache for insights
+    const insightsCacheKey = generateInsightsCacheKey(statistics);
+    const cachedInsights = getCachedInsights(insightsCacheKey);
 
-    if (cached) {
-      setAiInsights(cached);
+    if (cachedInsights) {
+      setAiInsights(cachedInsights);
       setIsLoadingAI(false);
     } else {
-      // Fetch from API (don't block UI)
-      fetchAIInsights(statistics).catch((error) => {
-        console.error("Error fetching AI insights:", error);
+      setIsLoadingAI(true);
+      fetchAIInsights(statistics).then((insights) => {
+        if (insights) {
+          setAiInsights(insights);
+        }
+        setIsLoadingAI(false);
       });
     }
   }, [statistics]);
+
+  // Pre-fetch recommendations for ALL preferences in the background
+  useEffect(() => {
+    if (!statistics || !allTopRecommendationsKey) {
+      if (!statistics) {
+        setAllRecommendations(new Map());
+        setAiRecommendations(null);
+        setIsLoadingRecommendations(false);
+        setLoadingPreferences(new Set());
+        fetchedStatisticsKey.current = null;
+      }
+      return;
+    }
+
+    // Skip if we've already fetched for this statistics key
+    // Check this FIRST before any async operations
+    if (fetchedStatisticsKey.current === allTopRecommendationsKey) {
+      console.log(`[Background Fetch] Skipping - already fetched for key: ${allTopRecommendationsKey}`);
+      return;
+    }
+
+    // Get fresh top recommendations for this statistics key
+    const currentTopRecommendations = allTopRecommendations;
+    if (currentTopRecommendations.size === 0) {
+      console.log(`[Background Fetch] Skipping - no top recommendations available`);
+      return;
+    }
+
+    // Mark that we're fetching for this key BEFORE starting any async operations
+    // This prevents multiple simultaneous fetches
+    fetchedStatisticsKey.current = allTopRecommendationsKey;
+    
+    console.log(`[Background Fetch] Starting fetch for statistics key: ${allTopRecommendationsKey}`);
+
+    const preferences: UserPreference[] = ["cost", "flexibility", "renewable"];
+    const fetchPromises: Promise<void>[] = [];
+    const newLoadingPreferences = new Set<UserPreference>();
+    
+    // Read current state once at the start
+    const currentAllRecommendations = allRecommendations;
+    const currentLoadingPreferences = loadingPreferences;
+    const newAllRecommendations = new Map(currentAllRecommendations);
+
+    preferences.forEach((pref) => {
+      // Skip if we already have recommendations for this preference
+      if (newAllRecommendations.has(pref)) {
+        console.log(`[Background Fetch] Skipping ${pref} - already in cache`);
+        return;
+      }
+
+      const topPlans = currentTopRecommendations.get(pref);
+      if (!topPlans || topPlans.length === 0) {
+        return;
+      }
+
+      // Check cache first
+      const planIds = topPlans.map((item) => item.plan.id).sort();
+      const cacheKey = generateRecommendationsCacheKey(statistics, pref, planIds);
+      const cached = getCachedRecommendations(cacheKey);
+
+      if (cached) {
+        // Use cached data
+        console.log(`[Background Fetch] Using cached recommendations for ${pref}`);
+        newAllRecommendations.set(pref, cached);
+      } else {
+        // Only fetch if not already loading
+        const currentLoading = currentLoadingPreferences.has(pref);
+        if (!currentLoading) {
+          // Fetch in background
+          newLoadingPreferences.add(pref);
+          const currentKey = allTopRecommendationsKey; // Capture for closure
+          console.log(`[Background Fetch] Fetching recommendations for preference: ${pref}`);
+          fetchPromises.push(
+            fetchAIRecommendations(statistics, topPlans, pref).then((recommendations) => {
+              if (recommendations) {
+                // Only update if we're still on the same statistics key
+                if (fetchedStatisticsKey.current === currentKey) {
+                  console.log(`[Background Fetch] Successfully fetched recommendations for ${pref}`);
+                  setAllRecommendations((prev) => {
+                    const next = new Map(prev);
+                    next.set(pref, recommendations);
+                    return next;
+                  });
+                } else {
+                  console.log(`[Background Fetch] Ignoring recommendations for ${pref} - statistics key changed`);
+                }
+              }
+              setLoadingPreferences((prev) => {
+                const next = new Set(prev);
+                next.delete(pref);
+                return next;
+              });
+            }).catch((error) => {
+              console.error(`[Background Fetch] Failed to fetch recommendations for ${pref}:`, error);
+              setLoadingPreferences((prev) => {
+                const next = new Set(prev);
+                next.delete(pref);
+                return next;
+              });
+            })
+          );
+        } else {
+          console.log(`[Background Fetch] Skipping ${pref} - already loading`);
+        }
+      }
+    });
+
+    // Update loading state only if there are new fetches
+    if (newLoadingPreferences.size > 0) {
+      setLoadingPreferences((prev) => {
+        const next = new Set(prev);
+        newLoadingPreferences.forEach((pref) => next.add(pref));
+        return next;
+      });
+    }
+    
+    // Update recommendations map with cached data
+    if (newAllRecommendations.size > currentAllRecommendations.size) {
+      setAllRecommendations(newAllRecommendations);
+    }
+
+    // Handle errors for background fetches
+    if (fetchPromises.length > 0) {
+      Promise.allSettled(fetchPromises).catch((error) => {
+        console.error("Error in background recommendation fetches:", error);
+      });
+    }
+    
+    // Cleanup function to prevent updates if component unmounts or key changes
+    return () => {
+      // If the key changes while fetches are in progress, mark them as cancelled
+      if (fetchedStatisticsKey.current !== allTopRecommendationsKey) {
+        console.log(`[Background Fetch] Cleanup - cancelling fetches for old key`);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allTopRecommendationsKey]);
+
+  // Update current recommendations when preference or topRecommendations change
+  useEffect(() => {
+    if (!statistics || topRecommendations.length === 0) {
+      return;
+    }
+
+    // Get the current top plan IDs
+    const currentPlanIds = topRecommendations.map((item) => item.plan.id).sort();
+    
+    // Get recommendations for this preference
+    const prefRecommendations = allRecommendations.get(preference);
+    
+    if (prefRecommendations) {
+      // Filter recommendations to only include plans that are in the current top 3
+      // This ensures we only show recommendations for plans that are actually displayed
+      const matchingRecommendations = prefRecommendations.filter((rec) =>
+        currentPlanIds.includes(rec.planId)
+      );
+      
+      // Only update if we have matching recommendations
+      if (matchingRecommendations.length > 0) {
+        setAiRecommendations(matchingRecommendations);
+        setIsLoadingRecommendations(false);
+        return;
+      }
+    }
+
+    // If no matching recommendations, check if it's loading
+    // Don't fetch here - the background fetch effect handles all fetching
+    if (loadingPreferences.has(preference)) {
+      setIsLoadingRecommendations(true);
+    } else {
+      // If not loading and no recommendations, they should be fetched by the background effect
+      // Just set loading to false and wait for background fetch to complete
+      setIsLoadingRecommendations(false);
+    }
+  }, [preference, topRecommendations, allRecommendations, loadingPreferences]);
+
+  // Handle preference change
+  const handlePreferenceChange = (newPreference: UserPreference) => {
+    setPreference(newPreference);
+    // Recommendations are pre-fetched, so we just need to update the display
+    // The useEffect will handle showing the correct recommendations
+  };
 
   const handleUploadSuccess = (data: HourlyUsageData[]) => {
     setUsageData(data);
     const stats = calculateUsageStatistics(data);
     setStatistics(stats);
     setSelectedPlanIds([]); // Reset selection when new data is uploaded
+    setPreference("cost"); // Reset preference to default
     // Clear AI cache when new CSV is uploaded
     clearAICache();
     setAiInsights(null);
+    setAiRecommendations(null);
+    setAllRecommendations(new Map()); // Clear all pre-fetched recommendations
     setIsLoadingAI(false);
+    setIsLoadingRecommendations(false);
+    setLoadingPreferences(new Set());
+    fetchedStatisticsKey.current = null; // Reset fetch tracking
   };
 
   const handleDownloadSample = (filename: string) => {
@@ -316,8 +622,23 @@ export default function Home() {
 
             {statistics && topRecommendations.length > 0 && (
               <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-semibold mb-1">Top Recommendations</h2>
+                    <p className="text-muted-foreground">
+                      Our top 3 energy plans based on your usage
+                    </p>
+                  </div>
+                  <PreferenceSelector
+                    preference={preference}
+                    onPreferenceChange={handlePreferenceChange}
+                    disabled={isLoadingRecommendations}
+                  />
+                </div>
                 <PlanRecommendations
                   recommendations={topRecommendations}
+                  aiRecommendations={aiRecommendations || undefined}
+                  isLoadingAI={isLoadingRecommendations}
                   selectedPlanIds={selectedPlanIds}
                   onPlanSelect={handlePlanSelect}
                 />

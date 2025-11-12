@@ -38,3 +38,4 @@ The system SHALL display a dedicated section showing the top 3 recommended plans
 - **AND** changing preference updates the displayed recommendations
 - **AND** loading state is shown while new recommendations are being fetched
 
+
