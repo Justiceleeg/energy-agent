@@ -3,7 +3,9 @@
 import { EnergyPlan, PlanCostResult } from "@/lib/types/plans";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Leaf, Calendar } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Leaf, Calendar, Info } from "lucide-react";
+import { getPlanComplexity, getComplexityLabel } from "@/lib/utils/planComplexity";
 
 interface PlanCardProps {
   plan: EnergyPlan;
@@ -50,6 +52,43 @@ export function PlanCard({
     }
   };
 
+  const complexity = getPlanComplexity(plan);
+  const complexityLabel = getComplexityLabel(complexity);
+
+  // Get tooltip text for tiered or bill credit plans
+  const getTooltipText = (): string | null => {
+    const tieredRule = plan.pricing.find((rule) => rule.type === "TIERED");
+    const billCreditRule = plan.pricing.find((rule) => rule.type === "BILL_CREDIT");
+
+    if (tieredRule && tieredRule.type === "TIERED") {
+      const tierDescriptions = tieredRule.tiers.map((tier, index) => {
+        if (tier.maxKwh === null) {
+          return `Above ${tieredRule.tiers[index - 1]?.maxKwh || 0} kWh: ${tier.ratePerKwh.toFixed(2)}¢/kWh`;
+        }
+        const prevMax = index === 0 ? 0 : tieredRule.tiers[index - 1]?.maxKwh || 0;
+        if (index === 0) {
+          return `First ${tier.maxKwh} kWh: ${tier.ratePerKwh.toFixed(2)}¢/kWh`;
+        }
+        return `Next ${tier.maxKwh - prevMax} kWh (${prevMax + 1}-${tier.maxKwh}): ${tier.ratePerKwh.toFixed(2)}¢/kWh`;
+      });
+      return `Tiered Pricing:\n${tierDescriptions.join("\n")}`;
+    }
+
+    if (billCreditRule && billCreditRule.type === "BILL_CREDIT") {
+      const maxText = billCreditRule.maxKwh === null ? "unlimited" : `${billCreditRule.maxKwh}`;
+      return `Bill Credit: $${billCreditRule.amount.toFixed(2)} credit for usage between ${billCreditRule.minKwh}-${maxText} kWh/month`;
+    }
+
+    // For medium complexity plans without tooltip text, show generic message
+    if (complexity === "medium") {
+      return "This plan uses tiered pricing or bill credits. Hover over the info icon for details.";
+    }
+
+    return null;
+  };
+
+  const tooltipText = getTooltipText();
+
   return (
     <Card
       className={
@@ -74,6 +113,58 @@ export function PlanCard({
                 Best Value
               </span>
             )}
+            <div className="flex items-center gap-1">
+              <TooltipProvider delayDuration={300}>
+                {tooltipText ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span
+                        className={`text-xs font-medium px-2 py-1 rounded cursor-help ${
+                          complexity === "simple"
+                            ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+                            : complexity === "medium"
+                              ? "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"
+                              : "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300"
+                        }`}
+                      >
+                        {complexityLabel}
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <div className="whitespace-pre-line text-sm max-w-xs">
+                        {tooltipText}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <span
+                    className={`text-xs font-medium px-2 py-1 rounded ${
+                      complexity === "simple"
+                        ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+                        : complexity === "medium"
+                          ? "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"
+                          : "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300"
+                    }`}
+                  >
+                    {complexityLabel}
+                  </span>
+                )}
+                {tooltipText && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="cursor-help">
+                        <Info className="h-3 w-3 text-muted-foreground" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <div className="whitespace-pre-line text-sm max-w-xs">
+                        {tooltipText}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+              </TooltipProvider>
+            </div>
             {selectionCount !== undefined && (
               <span className="text-xs text-muted-foreground">
                 {selectionCount}/3 selected
@@ -94,6 +185,11 @@ export function PlanCard({
         {savings !== undefined && savings > 0 && !isCheapest && (
           <div className="text-sm text-green-600 dark:text-green-400 font-medium">
             Save {formatCurrency(savings)} vs most expensive
+          </div>
+        )}
+        {cost.breakdown.billCredits > 0 && (
+          <div className="text-sm text-green-600 dark:text-green-400 font-medium">
+            Bill credits: {formatCurrency(cost.breakdown.billCredits)}/year
           </div>
         )}
         <div className="flex items-center gap-4 text-sm">

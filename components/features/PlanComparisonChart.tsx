@@ -179,8 +179,8 @@ export function PlanComparisonChart({
         </div>
 
         {/* Chart */}
-        <div className="w-full h-[400px]">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="w-full h-[400px] min-h-[400px] min-w-0">
+          <ResponsiveContainer width="100%" height="100%" minHeight={400} minWidth={0}>
             <ChartComponent data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { analyzeUsagePatterns } from "@/lib/ai/analyzeUsagePatterns";
 import { UsageStatistics } from "@/lib/types/usage";
 
-const TIMEOUT_MS = 10000; // 10 seconds
+const TIMEOUT_MS = 35000; // 35 seconds (AI analysis can take 10-30 seconds, add buffer)
 
 export async function POST(request: NextRequest) {
   try {

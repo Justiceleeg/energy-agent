@@ -40,8 +40,8 @@ export default function Home() {
       return { rankedPlans: [], topRecommendations: [], topThreeIds: [] };
     }
 
-    const ranked = rankPlansByCost(plans, statistics.totalAnnualKWh);
-    const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh);
+    const ranked = rankPlansByCost(plans, statistics.totalAnnualKWh, statistics);
+    const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh, statistics);
     const topThreeIds = topThree.map((item) => item.plan.id);
 
     return {

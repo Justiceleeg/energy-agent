@@ -1,6 +1,6 @@
 import { EnergyPlan } from "@/lib/types/plans";
 import { HourlyUsageData, UsageStatistics } from "@/lib/types/usage";
-import { calculatePlanCost } from "./planCost";
+import { calculateTieredCost, calculateBillCredit } from "./planCost";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -86,11 +86,19 @@ function calculateMonthlyPlanCost(plan: EnergyPlan, monthlyKWh: number): number 
 
   let energyCost = 0;
   let baseCharges = 0;
+  let billCredits = 0;
 
   // Calculate energy cost from pricing rules
   for (const rule of plan.pricing) {
     if (rule.type === "FLAT_RATE") {
       energyCost += rule.pricePerKWh * monthlyKWh;
+    } else if (rule.type === "TIERED") {
+      // Calculate tiered cost for this month
+      energyCost += calculateTieredCost(monthlyKWh, rule.tiers);
+    } else if (rule.type === "BILL_CREDIT") {
+      // Calculate bill credit for this month
+      const credit = calculateBillCredit(monthlyKWh, rule.amount, rule.minKwh, rule.maxKwh);
+      billCredits += credit;
     } else if (rule.type === "BASE_CHARGE") {
       // Base charge pricing rules are monthly
       baseCharges += rule.amountPerMonth;
@@ -105,7 +113,7 @@ function calculateMonthlyPlanCost(plan: EnergyPlan, monthlyKWh: number): number 
   // Calculate TDU charges for the month
   const tduCharges = TDU_FIXED_MONTHLY + TDU_PER_KWH * monthlyKWh;
 
-  // Calculate total monthly cost
-  return energyCost + baseCharges + tduCharges;
+  // Calculate total monthly cost (bill credits are subtracted)
+  return energyCost + baseCharges + tduCharges - billCredits;
 }
 

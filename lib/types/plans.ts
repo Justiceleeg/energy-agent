@@ -1,8 +1,12 @@
 /**
- * Basic pricing rule for energy plans
- * Currently supports flat-rate only, but structured for future expansion
+ * Pricing rule for energy plans
+ * Supports flat-rate, base charges, tiered pricing, and bill credits
  */
-export type PricingRule = FlatRatePricing | BaseChargePricing;
+export type PricingRule =
+  | FlatRatePricing
+  | BaseChargePricing
+  | TieredPricing
+  | BillCreditPricing;
 
 /**
  * Flat-rate pricing: same price per kWh regardless of time
@@ -23,8 +27,35 @@ export interface BaseChargePricing {
 }
 
 /**
- * Basic energy plan structure
- * Currently supports flat-rate plans only
+ * Tiered pricing: different rates based on usage thresholds
+ */
+export interface TieredPricing {
+  type: "TIERED";
+  /** Array of tiers, ordered from lowest to highest threshold */
+  tiers: {
+    /** Maximum kWh for this tier (null for unlimited) */
+    maxKwh: number | null;
+    /** Rate per kWh in dollars for this tier */
+    ratePerKwh: number;
+  }[];
+}
+
+/**
+ * Bill credit: conditional credit applied based on usage thresholds
+ */
+export interface BillCreditPricing {
+  type: "BILL_CREDIT";
+  /** Credit amount in dollars (applied as negative cost) */
+  amount: number;
+  /** Minimum kWh required for credit (inclusive) */
+  minKwh: number;
+  /** Maximum kWh for credit (inclusive, null for unlimited) */
+  maxKwh: number | null;
+}
+
+/**
+ * Energy plan structure
+ * Supports flat-rate, tiered pricing, and bill credit plans
  */
 export interface EnergyPlan {
   /** Unique identifier for the plan */
@@ -43,6 +74,8 @@ export interface EnergyPlan {
   contractLength: number;
   /** Optional description of the plan */
   description?: string;
+  /** Pricing complexity: "simple" (flat-rate only), "medium" (tiered or bill credit), "complex" (future: TOU, seasonal) */
+  complexity?: "simple" | "medium" | "complex";
 }
 
 /**
@@ -61,6 +94,8 @@ export interface PlanCostResult {
     baseCharges: number;
     /** TDU (Transmission and Distribution Utility) charges */
     tduCharges: number;
+    /** Bill credits (if any, negative value) */
+    billCredits: number;
   };
 }
 

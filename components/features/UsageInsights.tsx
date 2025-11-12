@@ -131,11 +131,12 @@ export function UsageInsights({ statistics, aiInsights, isLoadingAI }: UsageInsi
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ResponsiveContainer width="100%" height={350}>
-            <BarChart
-              data={statistics.monthlyBreakdown}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
+          <div className="w-full h-[350px] min-h-[350px] min-w-0">
+            <ResponsiveContainer width="100%" height="100%" minHeight={350} minWidth={0}>
+              <BarChart
+                data={statistics.monthlyBreakdown}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis
                 dataKey="monthName"
@@ -163,8 +164,9 @@ export function UsageInsights({ statistics, aiInsights, isLoadingAI }: UsageInsi
                 fill="hsl(var(--primary))"
                 radius={[4, 4, 0, 0]}
               />
-            </BarChart>
-          </ResponsiveContainer>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </CardContent>
       </Card>
 

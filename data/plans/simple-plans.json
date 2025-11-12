@@ -298,6 +298,604 @@
     "renewablePercent": 35,
     "contractLength": 12,
     "description": "Simple, straightforward plan with moderate renewable"
+  },
+  {
+    "id": "plan-021",
+    "name": "Tiered Saver",
+    "provider": "SmartTier Energy",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 500, "ratePerKwh": 0.09 },
+          { "maxKwh": 1000, "ratePerKwh": 0.11 },
+          { "maxKwh": null, "ratePerKwh": 0.13 }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 0,
+    "contractLength": 12,
+    "description": "Lower rates for lower usage, perfect for small households"
+  },
+  {
+    "id": "plan-022",
+    "name": "Tiered Green",
+    "provider": "EcoTier Power",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 600, "ratePerKwh": 0.10 },
+          { "maxKwh": 1200, "ratePerKwh": 0.12 },
+          { "maxKwh": null, "ratePerKwh": 0.14 }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "100% renewable energy with tiered pricing structure"
+  },
+  {
+    "id": "plan-023",
+    "name": "Progressive Rate",
+    "provider": "StepUp Energy",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 400, "ratePerKwh": 0.08 },
+          { "maxKwh": 800, "ratePerKwh": 0.10 },
+          { "maxKwh": 1500, "ratePerKwh": 0.12 },
+          { "maxKwh": null, "ratePerKwh": 0.15 }
+        ]
+      }
+    ],
+    "baseCharge": 3.00,
+    "renewablePercent": 25,
+    "contractLength": 6,
+    "description": "Three-tier structure with increasing rates"
+  },
+  {
+    "id": "plan-024",
+    "name": "Budget Tier",
+    "provider": "ValueTier",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 500, "ratePerKwh": 0.095 },
+          { "maxKwh": null, "ratePerKwh": 0.115 }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 0,
+    "contractLength": 12,
+    "description": "Simple two-tier structure for budget-conscious users"
+  },
+  {
+    "id": "plan-025",
+    "name": "Green Tier Plus",
+    "provider": "RenewableTier",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 700, "ratePerKwh": 0.11 },
+          { "maxKwh": 1400, "ratePerKwh": 0.13 },
+          { "maxKwh": null, "ratePerKwh": 0.16 }
+        ]
+      }
+    ],
+    "baseCharge": 5.00,
+    "renewablePercent": 100,
+    "contractLength": 24,
+    "description": "Premium renewable energy with tiered pricing"
+  },
+  {
+    "id": "plan-026",
+    "name": "Family Tier",
+    "provider": "HomePower",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 800, "ratePerKwh": 0.10 },
+          { "maxKwh": 1600, "ratePerKwh": 0.12 },
+          { "maxKwh": null, "ratePerKwh": 0.14 }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 50,
+    "contractLength": 12,
+    "description": "Designed for families with moderate to high usage"
+  },
+  {
+    "id": "plan-027",
+    "name": "Economy Tier",
+    "provider": "BudgetTier Energy",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 450, "ratePerKwh": 0.085 },
+          { "maxKwh": 900, "ratePerKwh": 0.105 },
+          { "maxKwh": null, "ratePerKwh": 0.125 }
+        ]
+      }
+    ],
+    "baseCharge": 2.00,
+    "renewablePercent": 0,
+    "contractLength": 6,
+    "description": "Low-cost tiered plan for small households"
+  },
+  {
+    "id": "plan-028",
+    "name": "Solar Tier",
+    "provider": "SunTier Energy",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 600, "ratePerKwh": 0.12 },
+          { "maxKwh": null, "ratePerKwh": 0.15 }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "100% solar energy with two-tier pricing"
+  },
+  {
+    "id": "plan-029",
+    "name": "Flex Tier",
+    "provider": "FlexTier Power",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 550, "ratePerKwh": 0.09 },
+          { "maxKwh": 1100, "ratePerKwh": 0.11 },
+          { "maxKwh": 2000, "ratePerKwh": 0.13 },
+          { "maxKwh": null, "ratePerKwh": 0.16 }
+        ]
+      }
+    ],
+    "baseCharge": 4.00,
+    "renewablePercent": 30,
+    "contractLength": 12,
+    "description": "Flexible four-tier structure for varying usage"
+  },
+  {
+    "id": "plan-030",
+    "name": "Premium Tier",
+    "provider": "EliteTier Energy",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 750, "ratePerKwh": 0.11 },
+          { "maxKwh": 1500, "ratePerKwh": 0.13 },
+          { "maxKwh": null, "ratePerKwh": 0.17 }
+        ]
+      }
+    ],
+    "baseCharge": 8.00,
+    "renewablePercent": 75,
+    "contractLength": 24,
+    "description": "Premium tiered plan with high renewable content"
+  },
+  {
+    "id": "plan-031",
+    "name": "Starter Tier",
+    "provider": "Beginner Energy",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 500, "ratePerKwh": 0.10 },
+          { "maxKwh": null, "ratePerKwh": 0.12 }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 20,
+    "contractLength": 6,
+    "description": "Entry-level tiered plan with short commitment"
+  },
+  {
+    "id": "plan-032",
+    "name": "Long-Term Tier",
+    "provider": "StableTier",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 650, "ratePerKwh": 0.095 },
+          { "maxKwh": 1300, "ratePerKwh": 0.115 },
+          { "maxKwh": null, "ratePerKwh": 0.135 }
+        ]
+      }
+    ],
+    "baseCharge": 6.00,
+    "renewablePercent": 40,
+    "contractLength": 24,
+    "description": "Long-term tiered plan with locked rates"
+  },
+  {
+    "id": "plan-033",
+    "name": "Hybrid Tier",
+    "provider": "MixTier Energy",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 600, "ratePerKwh": 0.10 },
+          { "maxKwh": 1200, "ratePerKwh": 0.12 },
+          { "maxKwh": null, "ratePerKwh": 0.14 }
+        ]
+      }
+    ],
+    "baseCharge": 3.50,
+    "renewablePercent": 50,
+    "contractLength": 12,
+    "description": "Balanced tiered plan with mixed energy sources"
+  },
+  {
+    "id": "plan-034",
+    "name": "Value Tier",
+    "provider": "ValueTier Plus",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 500, "ratePerKwh": 0.092 },
+          { "maxKwh": 1000, "ratePerKwh": 0.112 },
+          { "maxKwh": null, "ratePerKwh": 0.132 }
+        ]
+      }
+    ],
+    "baseCharge": 1.00,
+    "renewablePercent": 15,
+    "contractLength": 12,
+    "description": "Good value tiered plan with low base charge"
+  },
+  {
+    "id": "plan-035",
+    "name": "Wind Tier",
+    "provider": "WindTier Power",
+    "pricing": [
+      {
+        "type": "TIERED",
+        "tiers": [
+          { "maxKwh": 700, "ratePerKwh": 0.12 },
+          { "maxKwh": null, "ratePerKwh": 0.15 }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "100% wind energy with tiered pricing"
+  },
+  {
+    "id": "plan-036",
+    "name": "Credit Saver",
+    "provider": "CreditPower",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.12
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 15.00,
+        "minKwh": 800,
+        "maxKwh": 1500
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 0,
+    "contractLength": 12,
+    "description": "$15 credit for usage between 800-1500 kWh/month"
+  },
+  {
+    "id": "plan-037",
+    "name": "Green Credit",
+    "provider": "EcoCredit Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.13
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 25.00,
+        "minKwh": 1000,
+        "maxKwh": 2000
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "$25 credit for moderate usage with 100% renewable"
+  },
+  {
+    "id": "plan-038",
+    "name": "High Usage Credit",
+    "provider": "HighCredit Power",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.11
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 30.00,
+        "minKwh": 1500,
+        "maxKwh": null
+      }
+    ],
+    "baseCharge": 5.00,
+    "renewablePercent": 25,
+    "contractLength": 12,
+    "description": "$30 credit for high usage (1500+ kWh/month)"
+  },
+  {
+    "id": "plan-039",
+    "name": "Budget Credit",
+    "provider": "BudgetCredit Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.105
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 10.00,
+        "minKwh": 500,
+        "maxKwh": 1000
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 0,
+    "contractLength": 6,
+    "description": "$10 credit for low to moderate usage"
+  },
+  {
+    "id": "plan-040",
+    "name": "Premium Credit",
+    "provider": "PremiumCredit",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.14
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 40.00,
+        "minKwh": 1200,
+        "maxKwh": 2500
+      }
+    ],
+    "baseCharge": 8.00,
+    "renewablePercent": 80,
+    "contractLength": 24,
+    "description": "$40 credit for moderate to high usage"
+  },
+  {
+    "id": "plan-041",
+    "name": "Family Credit",
+    "provider": "FamilyCredit Power",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.115
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 20.00,
+        "minKwh": 1000,
+        "maxKwh": 1800
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 50,
+    "contractLength": 12,
+    "description": "$20 credit designed for family usage patterns"
+  },
+  {
+    "id": "plan-042",
+    "name": "Solar Credit",
+    "provider": "SolarCredit Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.15
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 35.00,
+        "minKwh": 1100,
+        "maxKwh": 2200
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "$35 credit with 100% solar energy"
+  },
+  {
+    "id": "plan-043",
+    "name": "Low Usage Credit",
+    "provider": "LowCredit Power",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.12
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 12.00,
+        "minKwh": 400,
+        "maxKwh": 800
+      }
+    ],
+    "baseCharge": 2.00,
+    "renewablePercent": 20,
+    "contractLength": 6,
+    "description": "$12 credit for low usage households"
+  },
+  {
+    "id": "plan-044",
+    "name": "Elite Credit",
+    "provider": "EliteCredit Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.16
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 50.00,
+        "minKwh": 1500,
+        "maxKwh": 3000
+      }
+    ],
+    "baseCharge": 10.00,
+    "renewablePercent": 100,
+    "contractLength": 24,
+    "description": "$50 credit for high usage with premium renewable"
+  },
+  {
+    "id": "plan-045",
+    "name": "Mid-Range Credit",
+    "provider": "MidCredit",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.125
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 18.00,
+        "minKwh": 900,
+        "maxKwh": 1600
+      }
+    ],
+    "baseCharge": 4.00,
+    "renewablePercent": 35,
+    "contractLength": 12,
+    "description": "$18 credit for mid-range usage patterns"
+  },
+  {
+    "id": "plan-046",
+    "name": "Flex Credit",
+    "provider": "FlexCredit Power",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.11
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 22.00,
+        "minKwh": 1000,
+        "maxKwh": null
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 30,
+    "contractLength": 12,
+    "description": "$22 credit for usage above 1000 kWh/month"
+  },
+  {
+    "id": "plan-047",
+    "name": "Value Credit",
+    "provider": "ValueCredit Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.108
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 14.00,
+        "minKwh": 700,
+        "maxKwh": 1300
+      }
+    ],
+    "baseCharge": 1.50,
+    "renewablePercent": 15,
+    "contractLength": 12,
+    "description": "$14 credit for moderate usage with good value"
+  },
+  {
+    "id": "plan-048",
+    "name": "Wind Credit",
+    "provider": "WindCredit Power",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.145
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 28.00,
+        "minKwh": 1200,
+        "maxKwh": 2400
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 12,
+    "description": "$28 credit with 100% wind energy"
+  },
+  {
+    "id": "plan-049",
+    "name": "Starter Credit",
+    "provider": "StarterCredit",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.115
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 16.00,
+        "minKwh": 600,
+        "maxKwh": 1200
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 25,
+    "contractLength": 6,
+    "description": "$16 credit for entry-level users"
+  },
+  {
+    "id": "plan-050",
+    "name": "Long-Term Credit",
+    "provider": "LongCredit Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.13
+      },
+      {
+        "type": "BILL_CREDIT",
+        "amount": 32.00,
+        "minKwh": 1300,
+        "maxKwh": 2600
+      }
+    ],
+    "baseCharge": 7.00,
+    "renewablePercent": 45,
+    "contractLength": 24,
+    "description": "$32 credit for long-term commitment"
   }
 ]
 
