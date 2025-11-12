@@ -255,7 +255,7 @@ export function PlanGrid({
           </div>
         </div>
       )}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 md:auto-rows-fr">
         {sortedPlans.map((item) => (
           <PlanCard
             key={item.plan.id}
