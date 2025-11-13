@@ -100,7 +100,8 @@ export default function Home() {
     if (topThreeIds.length === 0) {
       hasAutoSelectedRef.current = false;
     }
-  }, [topThreeIds, selectedPlanIds.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topThreeIds]);
 
   // Calculate monthly breakdowns for selected plans when selection changes
   const monthlyBreakdowns = useMemo(() => {
