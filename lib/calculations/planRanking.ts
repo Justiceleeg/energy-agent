@@ -1,5 +1,5 @@
 import { EnergyPlan, PlanCostResult } from "@/lib/types/plans";
-import { UsageStatistics } from "@/lib/types/usage";
+import { UsageStatistics, HourlyUsageData } from "@/lib/types/usage";
 import { UserPreference } from "@/lib/types/ai";
 import { calculatePlanCost } from "./planCost";
 
@@ -42,13 +42,15 @@ function getFlexibilityScore(rating: "high" | "medium" | "low"): number {
  * @param totalKWh Total annual energy consumption in kWh
  * @param statistics Optional usage statistics (used to extract monthly breakdown for tiered/bill credit plans)
  * @param preference User preference: "cost" (default), "flexibility", or "renewable"
+ * @param hourlyUsageData Optional hourly usage data (required for TOU plans)
  * @returns Array of plans with costs, sorted by preference
  */
 export function rankPlansByCost(
   plans: EnergyPlan[],
   totalKWh: number,
   statistics?: UsageStatistics,
-  preference: UserPreference = "cost"
+  preference: UserPreference = "cost",
+  hourlyUsageData?: HourlyUsageData[]
 ): PlanWithCost[] {
   // Extract monthly kWh breakdown if statistics are provided
   const monthlyKWh = statistics?.monthlyBreakdown
@@ -58,7 +60,7 @@ export function rankPlansByCost(
   // Calculate costs for all plans
   const plansWithCosts: PlanWithCost[] = plans.map((plan) => ({
     plan,
-    cost: calculatePlanCost(plan, totalKWh, monthlyKWh),
+    cost: calculatePlanCost(plan, totalKWh, monthlyKWh, hourlyUsageData),
   }));
 
   // Sort based on preference
@@ -123,15 +125,17 @@ export function rankPlansByCost(
  * @param totalKWh Total annual energy consumption in kWh
  * @param statistics Optional usage statistics (used to extract monthly breakdown for tiered/bill credit plans)
  * @param preference User preference: "cost" (default), "flexibility", or "renewable"
+ * @param hourlyUsageData Optional hourly usage data (required for TOU plans)
  * @returns Top 3 plans with costs and savings
  */
 export function getTopRecommendations(
   plans: EnergyPlan[],
   totalKWh: number,
   statistics?: UsageStatistics,
-  preference: UserPreference = "cost"
+  preference: UserPreference = "cost",
+  hourlyUsageData?: HourlyUsageData[]
 ): PlanWithCost[] {
-  const ranked = rankPlansByCost(plans, totalKWh, statistics, preference);
+  const ranked = rankPlansByCost(plans, totalKWh, statistics, preference, hourlyUsageData);
   return ranked.slice(0, 3);
 }
 

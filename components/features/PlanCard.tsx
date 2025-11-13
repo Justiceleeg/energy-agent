@@ -1,11 +1,13 @@
 "use client";
 
-import { EnergyPlan, PlanCostResult } from "@/lib/types/plans";
+import { useState } from "react";
+import { EnergyPlan, PlanCostResult, TimeOfUsePricing, SeasonalPricing } from "@/lib/types/plans";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Leaf, Calendar, Info } from "lucide-react";
+import { Leaf, Calendar, Info, Eye } from "lucide-react";
 import { getPlanComplexity, getComplexityLabel } from "@/lib/utils/planComplexity";
+import { PlanDetailsModal } from "./PlanDetailsModal";
 
 interface PlanCardProps {
   plan: EnergyPlan;
@@ -28,6 +30,8 @@ export function PlanCard({
   isSelectionDisabled = false,
   selectionCount,
 }: PlanCardProps) {
+  const [showDetails, setShowDetails] = useState(false);
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -55,10 +59,52 @@ export function PlanCard({
   const complexity = getPlanComplexity(plan);
   const complexityLabel = getComplexityLabel(complexity);
 
-  // Get tooltip text for tiered or bill credit plans
+  // Get tooltip text for tiered, bill credit, TOU, or seasonal plans
   const getTooltipText = (): string | null => {
     const tieredRule = plan.pricing.find((rule) => rule.type === "TIERED");
     const billCreditRule = plan.pricing.find((rule) => rule.type === "BILL_CREDIT");
+    const touRule = plan.pricing.find((rule) => rule.type === "TIME_OF_USE") as TimeOfUsePricing | undefined;
+    const seasonalRules = plan.pricing.filter((rule) => rule.type === "SEASONAL") as SeasonalPricing[];
+
+    if (touRule) {
+      // Show TOU schedule summary
+      const freePeriods = touRule.schedule.filter((s) => s.ratePerKwh === 0);
+      const paidPeriods = touRule.schedule.filter((s) => s.ratePerKwh > 0);
+      const summaries: string[] = [];
+      
+      if (freePeriods.length > 0) {
+        summaries.push("Free energy periods available");
+      }
+      if (paidPeriods.length > 0) {
+        const lowestRate = Math.min(...paidPeriods.map((p) => p.ratePerKwh));
+        const highestRate = Math.max(...paidPeriods.map((p) => p.ratePerKwh));
+        summaries.push(`Rates: ${(lowestRate * 100).toFixed(2)}¢-${(highestRate * 100).toFixed(2)}¢/kWh`);
+      }
+      
+      return `Time-of-Use Pricing:\n${summaries.join("\n")}\n\nClick "View Details" for full schedule.`;
+    }
+
+    if (seasonalRules.length > 0) {
+      const summaries: string[] = [];
+      for (const rule of seasonalRules) {
+        const monthNames = rule.months
+          .sort((a, b) => a - b)
+          .map((m) => {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return months[m - 1];
+          })
+          .join(", ");
+        
+        if (rule.rateModifier > 1) {
+          const percent = ((rule.rateModifier - 1) * 100).toFixed(0);
+          summaries.push(`${monthNames}: +${percent}% higher`);
+        } else if (rule.rateModifier < 1) {
+          const percent = ((1 - rule.rateModifier) * 100).toFixed(0);
+          summaries.push(`${monthNames}: -${percent}% lower`);
+        }
+      }
+      return `Seasonal Pricing:\n${summaries.join("\n")}\n\nClick "View Details" for full calendar.`;
+    }
 
     if (tieredRule && tieredRule.type === "TIERED") {
       const tierDescriptions = tieredRule.tiers.map((tier, index) => {
@@ -84,10 +130,16 @@ export function PlanCard({
       return "This plan uses tiered pricing or bill credits. Hover over the info icon for details.";
     }
 
+    // For complex plans (TOU/seasonal), show generic message
+    if (complexity === "complex") {
+      return "This plan uses time-of-use or seasonal pricing. Click 'View Details' for full information.";
+    }
+
     return null;
   };
 
   const tooltipText = getTooltipText();
+  const hasComplexPricing = complexity === "complex";
 
   return (
     <Card
@@ -206,7 +258,17 @@ export function PlanCard({
           <CardDescription className="text-xs">{plan.description}</CardDescription>
         )}
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
+        {hasComplexPricing && (
+          <Button
+            variant="ghost"
+            className="w-full"
+            onClick={() => setShowDetails(true)}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            View Details
+          </Button>
+        )}
         <Button
           variant={isSelected ? "default" : "outline"}
           className="w-full"
@@ -216,6 +278,11 @@ export function PlanCard({
           {isSelected ? "Deselect" : "Select to Compare"}
         </Button>
       </CardFooter>
+      <PlanDetailsModal
+        plan={plan}
+        open={showDetails}
+        onOpenChange={setShowDetails}
+      />
     </Card>
   );
 }

@@ -54,7 +54,9 @@ Focus on:
 1. Peak usage times: Identify patterns in hour of day and day of week
 2. Seasonal trends: Compare summer vs winter, identify monthly variations
 3. Weekday/weekend patterns: Note any significant differences
-4. Actionable recommendations: Provide 3-5 specific, practical suggestions for optimizing energy usage
+4. Time-of-use suitability: Assess if the user's patterns align with time-of-use (TOU) plans (e.g., high night usage, low peak-hour usage)
+5. Seasonal plan suitability: Assess if the user's patterns align with seasonal plans (e.g., high summer/winter usage)
+6. Actionable recommendations: Provide 3-5 specific, practical suggestions for optimizing energy usage, including whether TOU or seasonal plans might be beneficial
 
 Write all insights in plain, conversational language that a homeowner can understand. Avoid technical jargon.`;
 

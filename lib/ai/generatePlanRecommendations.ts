@@ -1,7 +1,7 @@
 import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { UsageStatistics } from "@/lib/types/usage";
-import { EnergyPlan } from "@/lib/types/plans";
+import { EnergyPlan, TimeOfUsePricing, SeasonalPricing } from "@/lib/types/plans";
 import { PlanCostResult } from "@/lib/types/plans";
 import { PlanRecommendation, PlanRecommendationsResponse, UserPreference } from "@/lib/types/ai";
 import { PlanRecommendationsResponseSchema } from "./schemas";
@@ -63,6 +63,9 @@ export async function generatePlanRecommendations(
     
     // Format pricing structure
     let pricingDescription = "";
+    const touRule = plan.pricing.find((rule) => rule.type === "TIME_OF_USE") as TimeOfUsePricing | undefined;
+    const seasonalRules = plan.pricing.filter((rule) => rule.type === "SEASONAL") as SeasonalPricing[];
+
     plan.pricing.forEach((rule) => {
       if (rule.type === "FLAT_RATE") {
         pricingDescription += `Flat rate: $${rule.pricePerKWh.toFixed(4)}/kWh. `;
@@ -79,8 +82,44 @@ export async function generatePlanRecommendations(
         pricingDescription += `Bill credit: $${rule.amount.toFixed(2)} credit when usage is between ${rule.minKwh} and ${rule.maxKwh || "unlimited"} kWh. `;
       } else if (rule.type === "BASE_CHARGE") {
         pricingDescription += `Base charge: $${rule.amountPerMonth.toFixed(2)}/month. `;
+      } else if (rule.type === "TIME_OF_USE") {
+        // TOU pricing details
+        const freePeriods = touRule?.schedule.filter((s) => s.ratePerKwh === 0) || [];
+        const paidPeriods = touRule?.schedule.filter((s) => s.ratePerKwh > 0) || [];
+        if (freePeriods.length > 0) {
+          pricingDescription += `Time-of-use: FREE energy during certain hours. `;
+        }
+        if (paidPeriods.length > 0) {
+          const rates = paidPeriods.map((p) => p.ratePerKwh);
+          const minRate = Math.min(...rates);
+          const maxRate = Math.max(...rates);
+          pricingDescription += `Time-of-use rates: $${minRate.toFixed(4)}-$${maxRate.toFixed(4)}/kWh depending on time of day and day of week. `;
+        }
+      } else if (rule.type === "SEASONAL") {
+        // Seasonal pricing details (will be added after base pricing)
       }
     });
+
+    // Add seasonal modifier information
+    if (seasonalRules.length > 0) {
+      pricingDescription += `Seasonal pricing: `;
+      seasonalRules.forEach((rule) => {
+        const monthNames = rule.months
+          .sort((a, b) => a - b)
+          .map((m) => {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            return months[m - 1];
+          })
+          .join(", ");
+        if (rule.rateModifier > 1) {
+          const percent = ((rule.rateModifier - 1) * 100).toFixed(0);
+          pricingDescription += `${percent}% higher in ${monthNames}. `;
+        } else if (rule.rateModifier < 1) {
+          const percent = ((1 - rule.rateModifier) * 100).toFixed(0);
+          pricingDescription += `${percent}% lower in ${monthNames}. `;
+        }
+      });
+    }
 
     // Determine flexibility rating
     let flexibilityRating = "low";
@@ -147,12 +186,15 @@ Please provide personalized recommendations in the following JSON structure:
 
 Guidelines:
 1. For each plan, provide a personalized explanation that references the user's specific usage patterns (peak times, seasonal trends, monthly variations)
-2. Pros should highlight advantages specific to how the user consumes energy (e.g., "Great for evening usage" if peak is evening)
-3. Cons should mention drawbacks relevant to the user's situation
-4. "goodFor" badges should reflect usage patterns (e.g., "night owl" if peak is evening, "solar home" if low daytime usage, "high usage" if above average, "seasonal" if significant seasonal variation)
-5. Focus on the user's preference (${preference}) when explaining why each plan is recommended
-6. Write in plain, conversational language - avoid technical jargon
-7. Make explanations specific and actionable`;
+2. For time-of-use (TOU) plans: Explain how the user's peak usage times align (or don't align) with the plan's schedule. Mention specific times (e.g., "Your peak usage at 6pm aligns with this plan's off-peak rates")
+3. For seasonal plans: Explain how the user's seasonal usage patterns align (or don't align) with the plan's rate modifiers. Reference specific months (e.g., "Your high summer usage makes this plan expensive")
+4. Pros should highlight advantages specific to how the user consumes energy (e.g., "Great for evening usage" if peak is evening, "Free nights match your usage" for TOU plans)
+5. Cons should mention drawbacks relevant to the user's situation (e.g., "Peak rates during your high-usage hours" for TOU plans, "Higher rates in months you use most" for seasonal plans)
+6. "goodFor" badges should reflect usage patterns (e.g., "night owl" if peak is evening, "solar home" if low daytime usage, "high usage" if above average, "seasonal" if significant seasonal variation, "TOU-friendly" if usage aligns with TOU schedules)
+7. Focus on the user's preference (${preference}) when explaining why each plan is recommended
+8. Write in plain, conversational language - avoid technical jargon
+9. Make explanations specific and actionable
+10. For TOU plans, include guidance on shifting usage to lower-cost periods if applicable`;
 
   let lastError: Error | null = null;
 

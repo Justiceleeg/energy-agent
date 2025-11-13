@@ -3,7 +3,7 @@ import { EnergyPlan, PricingRule } from "@/lib/types/plans";
 /**
  * Determine the complexity of an energy plan based on its pricing rules
  * @param plan The energy plan to classify
- * @returns "simple" (flat-rate only), "medium" (tiered or bill credit), or "complex" (future: TOU, seasonal)
+ * @returns "simple" (flat-rate only), "medium" (tiered or bill credit), or "complex" (TOU, seasonal)
  */
 export function getPlanComplexity(plan: EnergyPlan): "simple" | "medium" | "complex" {
   // If complexity is already set, return it
@@ -11,11 +11,9 @@ export function getPlanComplexity(plan: EnergyPlan): "simple" | "medium" | "comp
     return plan.complexity;
   }
 
-  // Check for complex pricing rules (future: TOU, seasonal, etc.)
-  // For now, we don't have any complex rules, so this will always return "medium" or "simple"
+  // Check for complex pricing rules (TOU, seasonal)
   const hasComplexRules = plan.pricing.some((rule) => {
-    // Future: check for TOU, seasonal, etc.
-    return false;
+    return rule.type === "TIME_OF_USE" || rule.type === "SEASONAL";
   });
 
   if (hasComplexRules) {

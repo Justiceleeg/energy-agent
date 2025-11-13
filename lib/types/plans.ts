@@ -1,12 +1,14 @@
 /**
  * Pricing rule for energy plans
- * Supports flat-rate, base charges, tiered pricing, and bill credits
+ * Supports flat-rate, base charges, tiered pricing, bill credits, time-of-use, and seasonal pricing
  */
 export type PricingRule =
   | FlatRatePricing
   | BaseChargePricing
   | TieredPricing
-  | BillCreditPricing;
+  | BillCreditPricing
+  | TimeOfUsePricing
+  | SeasonalPricing;
 
 /**
  * Flat-rate pricing: same price per kWh regardless of time
@@ -54,8 +56,35 @@ export interface BillCreditPricing {
 }
 
 /**
+ * Time-of-use pricing: different rates based on hour of day and day of week
+ */
+export interface TimeOfUsePricing {
+  type: "TIME_OF_USE";
+  /** Array of schedule entries defining rates by time period */
+  schedule: {
+    /** Hours of day (0-23) - array of hour numbers */
+    hours: number[];
+    /** Days of week (0-6, where 0=Sunday, 1=Monday, ..., 6=Saturday) - array of day numbers */
+    days: number[];
+    /** Rate per kWh in dollars for this schedule period */
+    ratePerKwh: number;
+  }[];
+}
+
+/**
+ * Seasonal pricing: rate modifiers applied to base rates for specific months
+ */
+export interface SeasonalPricing {
+  type: "SEASONAL";
+  /** Months (1-12, where 1=January, 2=February, ..., 12=December) - array of month numbers */
+  months: number[];
+  /** Rate modifier (multiplier) applied to base energy cost for these months */
+  rateModifier: number;
+}
+
+/**
  * Energy plan structure
- * Supports flat-rate, tiered pricing, and bill credit plans
+ * Supports flat-rate, tiered pricing, bill credit plans, time-of-use, and seasonal pricing
  */
 export interface EnergyPlan {
   /** Unique identifier for the plan */
@@ -74,7 +103,7 @@ export interface EnergyPlan {
   contractLength: number;
   /** Optional description of the plan */
   description?: string;
-  /** Pricing complexity: "simple" (flat-rate only), "medium" (tiered or bill credit), "complex" (future: TOU, seasonal) */
+  /** Pricing complexity: "simple" (flat-rate only), "medium" (tiered or bill credit), "complex" (TOU, seasonal) */
   complexity?: "simple" | "medium" | "complex";
 }
 

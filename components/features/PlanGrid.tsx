@@ -25,9 +25,9 @@ export function PlanGrid({
 }: PlanGridProps) {
   const [sortBy, setSortBy] = useState<SortOption>("cost-asc");
   const [showFilters, setShowFilters] = useState(false);
-  const [complexityFilters, setComplexityFilters] = useState<Set<"simple" | "medium" | "complex">>(new Set(["simple", "medium"]));
+  const [complexityFilters, setComplexityFilters] = useState<Set<"simple" | "medium" | "complex">>(new Set(["simple", "medium", "complex"]));
   const [renewableRange, setRenewableRange] = useState<[number, number]>([0, 100]);
-  const [contractLengthFilters, setContractLengthFilters] = useState<Set<number>>(new Set([6, 12, 24]));
+  const [contractLengthFilters, setContractLengthFilters] = useState<Set<number>>(new Set([6, 12, 18, 24]));
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
 
   // Calculate price range from plans
@@ -93,17 +93,17 @@ export function PlanGrid({
   // Count active filters
   const activeFilterCount = useMemo(() => {
     let count = 0;
-    if (complexityFilters.size < 2) count++;
+    if (complexityFilters.size < 3) count++;
     if (renewableRange[0] > 0 || renewableRange[1] < 100) count++;
-    if (contractLengthFilters.size < 3) count++;
+    if (contractLengthFilters.size < 4) count++;
     if (priceRange[0] > calculatedPriceRange[0] || priceRange[1] < calculatedPriceRange[1]) count++;
     return count;
   }, [complexityFilters, renewableRange, contractLengthFilters, priceRange, calculatedPriceRange]);
 
   const clearFilters = () => {
-    setComplexityFilters(new Set(["simple", "medium"]));
+    setComplexityFilters(new Set(["simple", "medium", "complex"]));
     setRenewableRange([0, 100]);
-    setContractLengthFilters(new Set([6, 12, 24]));
+    setContractLengthFilters(new Set([6, 12, 18, 24]));
     setPriceRange([calculatedPriceRange[0], calculatedPriceRange[1]]);
   };
 
@@ -176,7 +176,7 @@ export function PlanGrid({
             <div>
               <label className="text-sm font-medium mb-2 block">Complexity</label>
               <div className="space-y-2">
-                {(["simple", "medium"] as const).map((complexity) => (
+                {(["simple", "medium", "complex"] as const).map((complexity) => (
                   <label key={complexity} className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
@@ -216,7 +216,7 @@ export function PlanGrid({
             <div>
               <label className="text-sm font-medium mb-2 block">Contract Length</label>
               <div className="space-y-2">
-                {[6, 12, 24].map((length) => (
+                {[6, 12, 18, 24].map((length) => (
                   <label key={length} className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"

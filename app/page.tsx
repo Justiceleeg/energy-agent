@@ -14,9 +14,10 @@ import { HourlyUsageData } from "@/lib/types/usage";
 import { EnergyPlan } from "@/lib/types/plans";
 import { UsageAnalysisInsights, PlanRecommendation, PlanRecommendationsResponse, UserPreference } from "@/lib/types/ai";
 import { calculateUsageStatistics } from "@/lib/utils/usageStatistics";
-import { rankPlansByCost, getTopRecommendations } from "@/lib/calculations/planRanking";
+import { rankPlansByCost, getTopRecommendations, PlanWithCost } from "@/lib/calculations/planRanking";
 import { calculateMonthlyBreakdown, MonthlyCostBreakdown } from "@/lib/calculations/monthlyBreakdown";
 import simplePlans from "@/data/plans/simple-plans.json";
+import complexPlans from "@/data/plans/complex-plans.json";
 
 const CACHE_KEY_PREFIX_INSIGHTS = "ai_insights_";
 const CACHE_KEY_PREFIX_RECOMMENDATIONS = "ai_recommendations_";
@@ -42,7 +43,8 @@ export default function Home() {
   // Track which statistics key we've already fetched for to prevent re-fetching
   const fetchedStatisticsKey = useRef<string | null>(null);
 
-  const plans = simplePlans as EnergyPlan[];
+  // Combine all plans: 50 simple plans + 30 complex plans = 80 total
+  const plans = [...(simplePlans as EnergyPlan[]), ...(complexPlans as EnergyPlan[])];
 
   // Calculate plan costs and rankings when usage data is available
   const { rankedPlans, topRecommendations, topThreeIds } = useMemo(() => {
@@ -50,8 +52,8 @@ export default function Home() {
       return { rankedPlans: [], topRecommendations: [], topThreeIds: [] };
     }
 
-    const ranked = rankPlansByCost(plans, statistics.totalAnnualKWh, statistics, preference);
-    const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh, statistics, preference);
+    const ranked = rankPlansByCost(plans, statistics.totalAnnualKWh, statistics, preference, usageData || undefined);
+    const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh, statistics, preference, usageData || undefined);
     const topThreeIds = topThree.map((item) => item.plan.id);
 
     return {
@@ -59,7 +61,7 @@ export default function Home() {
       topRecommendations: topThree,
       topThreeIds,
     };
-  }, [statistics, plans, preference]);
+  }, [statistics, plans, preference, usageData]);
 
   // Calculate top recommendations for ALL preferences (for background fetching)
   // Use a stable key to prevent unnecessary re-renders
@@ -77,17 +79,26 @@ export default function Home() {
     const map = new Map<UserPreference, PlanWithCost[]>();
 
     preferences.forEach((pref) => {
-      const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh, statistics, pref);
+      const topThree = getTopRecommendations(plans, statistics.totalAnnualKWh, statistics, pref, usageData || undefined);
       map.set(pref, topThree);
     });
 
     return map;
-  }, [statistics, plans]);
+  }, [statistics, plans, usageData]);
 
   // Default to top 3 recommendations when usage data is first available
+  // Only auto-select on initial load, not when preference changes
+  const hasAutoSelectedRef = useRef(false);
+  
   useEffect(() => {
-    if (topThreeIds.length > 0 && selectedPlanIds.length === 0) {
+    if (topThreeIds.length > 0 && selectedPlanIds.length === 0 && !hasAutoSelectedRef.current) {
       setSelectedPlanIds(topThreeIds);
+      hasAutoSelectedRef.current = true;
+    }
+    
+    // Reset the flag when data is cleared
+    if (topThreeIds.length === 0) {
+      hasAutoSelectedRef.current = false;
     }
   }, [topThreeIds, selectedPlanIds.length]);
 

@@ -1,0 +1,753 @@
+[
+  {
+    "id": "tou-001",
+    "name": "Free Nights Plus",
+    "provider": "NightPower",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [22, 23, 0, 1, 2, 3, 4, 5],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.0
+          },
+          {
+            "hours": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.15
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 50,
+    "contractLength": 12,
+    "description": "Free energy from 10pm to 6am every day"
+  },
+  {
+    "id": "tou-002",
+    "name": "Weekend Freedom",
+    "provider": "FlexEnergy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.0
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.13
+          }
+        ]
+      }
+    ],
+    "baseCharge": 5.00,
+    "renewablePercent": 30,
+    "contractLength": 12,
+    "description": "Free energy on weekends, standard rates weekdays"
+  },
+  {
+    "id": "tou-003",
+    "name": "Midnight Saver",
+    "provider": "NightShift Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [23, 0, 1, 2, 3, 4, 5],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.0
+          },
+          {
+            "hours": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.14
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 40,
+    "contractLength": 24,
+    "description": "Free energy from 11pm to 6am"
+  },
+  {
+    "id": "tou-004",
+    "name": "Evening Advantage",
+    "provider": "Sunset Power",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.0
+          },
+          {
+            "hours": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.16
+          }
+        ]
+      }
+    ],
+    "baseCharge": 3.00,
+    "renewablePercent": 60,
+    "contractLength": 12,
+    "description": "Free energy from 8pm to 7am"
+  },
+  {
+    "id": "tou-005",
+    "name": "Weekend Warrior",
+    "provider": "Leisure Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.0
+          },
+          {
+            "hours": [22, 23, 0, 1, 2, 3, 4, 5],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.0
+          },
+          {
+            "hours": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.18
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 35,
+    "contractLength": 18,
+    "description": "Free weekends and free nights on weekdays"
+  },
+  {
+    "id": "tou-006",
+    "name": "Peak Saver",
+    "provider": "SmartGrid Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [14, 15, 16, 17, 18, 19],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.20
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 20, 21, 22, 23],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.10
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.10
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 45,
+    "contractLength": 12,
+    "description": "Higher rates 2pm-8pm weekdays, lower rates otherwise"
+  },
+  {
+    "id": "tou-007",
+    "name": "Afternoon Premium",
+    "provider": "PeakPower",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [13, 14, 15, 16, 17, 18],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.22
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.11
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.11
+          }
+        ]
+      }
+    ],
+    "baseCharge": 2.50,
+    "renewablePercent": 50,
+    "contractLength": 24,
+    "description": "Peak rates 1pm-7pm weekdays"
+  },
+  {
+    "id": "tou-008",
+    "name": "Business Hours Plus",
+    "provider": "DayShift Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.19
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 18, 19, 20, 21, 22, 23],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.09
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.09
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 40,
+    "contractLength": 12,
+    "description": "Higher rates during business hours 8am-6pm weekdays"
+  },
+  {
+    "id": "tou-009",
+    "name": "Evening Peak",
+    "provider": "RushHour Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [17, 18, 19, 20],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.25
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 21, 22, 23],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.10
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.10
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 55,
+    "contractLength": 18,
+    "description": "Premium rates 5pm-9pm weekdays"
+  },
+  {
+    "id": "tou-010",
+    "name": "Morning Rush",
+    "provider": "EarlyBird Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [6, 7, 8, 9],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.21
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.10
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.10
+          }
+        ]
+      }
+    ],
+    "baseCharge": 1.50,
+    "renewablePercent": 35,
+    "contractLength": 12,
+    "description": "Higher rates 6am-10am weekdays"
+  },
+  {
+    "id": "tou-011",
+    "name": "Night Owl Special",
+    "provider": "Moonlight Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [22, 23, 0, 1, 2, 3, 4, 5],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.0
+          },
+          {
+            "hours": [14, 15, 16, 17, 18],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.18
+          },
+          {
+            "hours": [6, 7, 8, 9, 10, 11, 12, 13, 19, 20, 21],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.12
+          },
+          {
+            "hours": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+            "days": [0, 6],
+            "ratePerKwh": 0.12
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 60,
+    "contractLength": 12,
+    "description": "Free nights plus peak afternoon rates weekdays"
+  },
+  {
+    "id": "tou-012",
+    "name": "Solar Home Match",
+    "provider": "SunSync Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.08
+          },
+          {
+            "hours": [18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5],
+            "days": [0, 1, 2, 3, 4, 5, 6],
+            "ratePerKwh": 0.16
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 100,
+    "contractLength": 24,
+    "description": "Lower daytime rates, higher evening rates - perfect for solar homes"
+  },
+  {
+    "id": "tou-013",
+    "name": "Triple Rate",
+    "provider": "FlexRate Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [14, 15, 16, 17, 18],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.24
+          },
+          {
+            "hours": [6, 7, 8, 9, 10, 11, 12, 13, 19, 20, 21],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.13
+          },
+          {
+            "hours": [22, 23, 0, 1, 2, 3, 4, 5],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.08
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.10
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 45,
+    "contractLength": 12,
+    "description": "Three-tier weekday rates: peak afternoon, mid-day, off-peak nights"
+  },
+  {
+    "id": "tou-014",
+    "name": "Weekend Discount Plus",
+    "provider": "LeisureGrid",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.08
+          },
+          {
+            "hours": [14, 15, 16, 17, 18],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.19
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20, 21, 22, 23],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.11
+          }
+        ]
+      }
+    ],
+    "baseCharge": 2.00,
+    "renewablePercent": 50,
+    "contractLength": 18,
+    "description": "Low weekend rates plus weekday peak pricing"
+  },
+  {
+    "id": "tou-015",
+    "name": "Extended Off-Peak",
+    "provider": "ValueTime Energy",
+    "pricing": [
+      {
+        "type": "TIME_OF_USE",
+        "schedule": [
+          {
+            "hours": [10, 11, 12, 13, 14, 15, 16, 17],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.17
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 19, 20, 21, 22, 23],
+            "days": [1, 2, 3, 4, 5],
+            "ratePerKwh": 0.09
+          },
+          {
+            "hours": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+            "days": [0, 6],
+            "ratePerKwh": 0.09
+          }
+        ]
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 40,
+    "contractLength": 12,
+    "description": "Extended off-peak hours with midday peak"
+  },
+  {
+    "id": "seasonal-001",
+    "name": "Summer Premium",
+    "provider": "HeatWave Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.11
+      },
+      {
+        "type": "SEASONAL",
+        "months": [6, 7, 8],
+        "rateModifier": 1.5
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 30,
+    "contractLength": 12,
+    "description": "Higher rates in summer months (July-September)"
+  },
+  {
+    "id": "seasonal-002",
+    "name": "AC Season Plus",
+    "provider": "CoolBreeze Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.10
+      },
+      {
+        "type": "SEASONAL",
+        "months": [5, 6, 7, 8, 9],
+        "rateModifier": 1.4
+      }
+    ],
+    "baseCharge": 2.00,
+    "renewablePercent": 35,
+    "contractLength": 12,
+    "description": "Premium rates May-September for AC season"
+  },
+  {
+    "id": "seasonal-003",
+    "name": "Peak Summer",
+    "provider": "SunBlaze Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.09
+      },
+      {
+        "type": "SEASONAL",
+        "months": [6, 7, 8],
+        "rateModifier": 1.6
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 25,
+    "contractLength": 24,
+    "description": "Significantly higher rates July-September"
+  },
+  {
+    "id": "seasonal-004",
+    "name": "Extended Summer",
+    "provider": "Tropical Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.105
+      },
+      {
+        "type": "SEASONAL",
+        "months": [4, 5, 6, 7, 8, 9],
+        "rateModifier": 1.35
+      }
+    ],
+    "baseCharge": 1.50,
+    "renewablePercent": 40,
+    "contractLength": 12,
+    "description": "Higher rates April-September"
+  },
+  {
+    "id": "seasonal-005",
+    "name": "Summer Surge",
+    "provider": "HotSpot Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.095
+      },
+      {
+        "type": "SEASONAL",
+        "months": [6, 7, 8],
+        "rateModifier": 1.55
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 30,
+    "contractLength": 18,
+    "description": "Premium summer rates July-September"
+  },
+  {
+    "id": "seasonal-006",
+    "name": "Winter Premium",
+    "provider": "FrostGuard Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.11
+      },
+      {
+        "type": "SEASONAL",
+        "months": [12, 1, 2],
+        "rateModifier": 1.5
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 35,
+    "contractLength": 12,
+    "description": "Higher rates in winter months (December-February)"
+  },
+  {
+    "id": "seasonal-007",
+    "name": "Heating Season",
+    "provider": "WarmHome Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.10
+      },
+      {
+        "type": "SEASONAL",
+        "months": [11, 12, 1, 2, 3],
+        "rateModifier": 1.4
+      }
+    ],
+    "baseCharge": 2.50,
+    "renewablePercent": 40,
+    "contractLength": 12,
+    "description": "Premium rates November-March for heating"
+  },
+  {
+    "id": "seasonal-008",
+    "name": "Cold Weather Plus",
+    "provider": "Arctic Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.095
+      },
+      {
+        "type": "SEASONAL",
+        "months": [12, 1, 2],
+        "rateModifier": 1.6
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 30,
+    "contractLength": 24,
+    "description": "Significantly higher rates December-February"
+  },
+  {
+    "id": "seasonal-009",
+    "name": "Extended Winter",
+    "provider": "SnowFall Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.105
+      },
+      {
+        "type": "SEASONAL",
+        "months": [10, 11, 12, 1, 2, 3],
+        "rateModifier": 1.35
+      }
+    ],
+    "baseCharge": 1.00,
+    "renewablePercent": 45,
+    "contractLength": 12,
+    "description": "Higher rates October-March"
+  },
+  {
+    "id": "seasonal-010",
+    "name": "Winter Surge",
+    "provider": "IceStorm Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.10
+      },
+      {
+        "type": "SEASONAL",
+        "months": [12, 1, 2],
+        "rateModifier": 1.55
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 35,
+    "contractLength": 18,
+    "description": "Premium winter rates December-February"
+  },
+  {
+    "id": "seasonal-011",
+    "name": "Spring Discount",
+    "provider": "Bloom Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.12
+      },
+      {
+        "type": "SEASONAL",
+        "months": [3, 4, 5],
+        "rateModifier": 0.75
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 60,
+    "contractLength": 12,
+    "description": "25% discount in spring months (March-May)"
+  },
+  {
+    "id": "seasonal-012",
+    "name": "Fall Savings",
+    "provider": "Autumn Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.12
+      },
+      {
+        "type": "SEASONAL",
+        "months": [9, 10, 11],
+        "rateModifier": 0.75
+      }
+    ],
+    "baseCharge": 1.00,
+    "renewablePercent": 55,
+    "contractLength": 12,
+    "description": "25% discount in fall months (September-November)"
+  },
+  {
+    "id": "seasonal-013",
+    "name": "Shoulder Season Special",
+    "provider": "MildWeather Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.13
+      },
+      {
+        "type": "SEASONAL",
+        "months": [3, 4, 5, 9, 10, 11],
+        "rateModifier": 0.70
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 50,
+    "contractLength": 24,
+    "description": "30% discount in spring and fall months"
+  },
+  {
+    "id": "seasonal-014",
+    "name": "Mild Season Advantage",
+    "provider": "ComfortZone Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.115
+      },
+      {
+        "type": "SEASONAL",
+        "months": [4, 5, 9, 10],
+        "rateModifier": 0.80
+      }
+    ],
+    "baseCharge": 2.00,
+    "renewablePercent": 45,
+    "contractLength": 12,
+    "description": "20% discount in April, May, September, October"
+  },
+  {
+    "id": "seasonal-015",
+    "name": "Off-Peak Season",
+    "provider": "Moderate Energy",
+    "pricing": [
+      {
+        "type": "FLAT_RATE",
+        "pricePerKWh": 0.125
+      },
+      {
+        "type": "SEASONAL",
+        "months": [3, 4, 5, 9, 10, 11],
+        "rateModifier": 0.72
+      }
+    ],
+    "baseCharge": 0,
+    "renewablePercent": 40,
+    "contractLength": 18,
+    "description": "28% discount in shoulder seasons"
+  }
+]
+
