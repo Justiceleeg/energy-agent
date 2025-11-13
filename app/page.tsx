@@ -483,14 +483,50 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTopRecommendationsKey]);
 
-  // Update current recommendations when preference or topRecommendations change
+  // Memoize plan IDs as a stable string to prevent unnecessary re-renders
+  const topPlanIdsString = useMemo(() => {
+    if (topRecommendations.length === 0) return '';
+    return topRecommendations.map((item) => item.plan.id).sort().join(',');
+  }, [topRecommendations]);
+
+  // Track previous state to prevent infinite loops
+  const prevStateRef = useRef<{
+    preference: UserPreference;
+    planIds: string;
+    allRecsSize: number;
+  }>({ preference: 'cost', planIds: '', allRecsSize: 0 });
+
+  // Update current recommendations when preference or plan IDs change
   useEffect(() => {
     if (!statistics || topRecommendations.length === 0) {
       return;
     }
 
-    // Get the current top plan IDs
-    const currentPlanIds = topRecommendations.map((item) => item.plan.id).sort();
+    const currentPlanIds = topPlanIdsString;
+    const currentAllRecsSize = allRecommendations.size;
+    const currentPreference = preference;
+
+    // Check if anything actually changed
+    const prevState = prevStateRef.current;
+    if (
+      prevState.preference === currentPreference &&
+      prevState.planIds === currentPlanIds &&
+      prevState.allRecsSize === currentAllRecsSize &&
+      prevState.planIds !== ''
+    ) {
+      // Nothing changed, skip update
+      return;
+    }
+
+    // Update ref with current state
+    prevStateRef.current = {
+      preference: currentPreference,
+      planIds: currentPlanIds,
+      allRecsSize: currentAllRecsSize,
+    };
+
+    // Get the current top plan IDs as array
+    const currentPlanIdsArray = topRecommendations.map((item) => item.plan.id).sort();
     
     // Get recommendations for this preference
     const prefRecommendations = allRecommendations.get(preference);
@@ -499,7 +535,7 @@ export default function Home() {
       // Filter recommendations to only include plans that are in the current top 3
       // This ensures we only show recommendations for plans that are actually displayed
       const matchingRecommendations = prefRecommendations.filter((rec) =>
-        currentPlanIds.includes(rec.planId)
+        currentPlanIdsArray.includes(rec.planId)
       );
       
       // Only update if we have matching recommendations
@@ -519,7 +555,8 @@ export default function Home() {
       // Just set loading to false and wait for background fetch to complete
       setIsLoadingRecommendations(false);
     }
-  }, [preference, topRecommendations, allRecommendations, loadingPreferences]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preference, topPlanIdsString, allRecommendations, loadingPreferences]);
 
   // Handle preference change
   const handlePreferenceChange = (newPreference: UserPreference) => {
